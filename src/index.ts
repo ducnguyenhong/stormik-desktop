@@ -13,13 +13,22 @@ if (require('electron-squirrel-startup')) {
 const createWindow = (): void => {
   const mainWindow = new BrowserWindow({
     x: 0,
-    y: 100,
+    y: 0,
     height: 1080,
     width: 1920,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY
     }
+    // titleBarStyle: 'hidden',
+    // titleBarOverlay: {
+    //   color: '#2f3241',
+    //   symbolColor: '#74b1be',
+    //   height: 40,
+    // }
   });
+
+  mainWindow.removeMenu();
+  mainWindow.maximize();
 
   const headerView = new WebContentsView({
     webPreferences: {
@@ -28,37 +37,46 @@ const createWindow = (): void => {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY
     }
   });
-
-  mainWindow.removeMenu();
-
+  const bodyView = new WebContentsView({
+    webPreferences: {
+      // contextIsolation: false,
+      // nodeIntegration: true,
+      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY
+    }
+  });
   mainWindow.contentView.addChildView(headerView);
+  mainWindow.contentView.addChildView(bodyView);
+
   headerView.setBounds({
     x: 0,
     y: 0,
     width: mainWindow.getContentBounds().width,
-    height: 70
+    height: 75
   });
   headerView.webContents.loadURL('http://localhost:3000/header');
 
-  // mainWindow.setBounds({
-  //   x: 0,
-  //   y: 100,
-  //   width: mainWindow.getContentBounds().width
-  // });
+  bodyView.setBounds({
+    x: 0,
+    y: 75,
+    width: mainWindow.getContentBounds().width,
+    height: mainWindow.getContentBounds().height - 75
+  });
+  bodyView.webContents.loadURL('https://stormik.vercel.app/search');
 
-  mainWindow.loadURL('https://stormik.vercel.app/search');
+  // mainWindow.loadURL('https://stormik.vercel.app/search');
 
   // mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   ipcMain.on('url-enter', (e, data) => {
-    mainWindow.loadURL(data);
+    bodyView.webContents.loadURL(data);
   });
 
+  // bodyView.webContents.openDevTools();
   // Open the DevTools.
   mainWindow.webContents.on('before-input-event', (event, input) => {
     if (input.key === 'F12') {
       event.preventDefault();
-      mainWindow.webContents.openDevTools();
+      bodyView.webContents.openDevTools();
     }
   });
 };

@@ -1,7 +1,7 @@
 import { memo, useState } from 'react';
 
 const InputURL: React.FC = () => {
-  const [url, setUrl] = useState<string>('https://stormik.vercel.app/search');
+  const [url, setUrl] = useState<string>('');
 
   return (
     <div className="wrapper-input-url">
@@ -16,11 +16,19 @@ const InputURL: React.FC = () => {
               return;
             }
 
-            let urlEnter = url;
-            if (!/^.*?:\/\//.test(url)) {
-              urlEnter = `https://${url}`;
+            if (
+              url.match(
+                /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&=]*)/g
+              )
+            ) {
+              if (!/^.*?:\/\//.test(url)) {
+                window.electronAPI.enterUrl(`https://${url}`);
+                return;
+              }
+              window.electronAPI.enterUrl(url);
+              return;
             }
-            window.electronAPI.enterUrl(urlEnter);
+            window.electronAPI.enterUrl(`https://stormik.vercel.app/search?query=${url}`);
           }
         }}
       />
