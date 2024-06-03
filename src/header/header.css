@@ -1,0 +1,77 @@
+.main-header {
+  height: 70px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #fff;
+  border-bottom: 1px solid #e6e6e6;
+  padding: 5px 10px;
+}
+
+.main-header-top {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.main-header-top .button-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.main-header-top .prev-button {
+  width: 30px;
+  height: 30px;
+  background-color: #fff;
+  border: none;
+  border-radius: 100%;
+  transition-duration: 250ms;
+}
+
+.main-header-top .prev-button:hover {
+  background-color: #f2f2f2;
+  transition-duration: 250ms;
+}
+
+.main-header-top .next-button {
+  width: 30px;
+  height: 30px;
+  background-color: #fff;
+  border: none;
+  border-radius: 100%;
+  transition-duration: 250ms;
+}
+
+.main-header-top .next-button:hover {
+  background-color: #f2f2f2;
+  transition-duration: 250ms;
+}
+
+.main-header-top .reload-button {
+  width: 30px;
+  height: 30px;
+  background-color: #fff;
+  border: none;
+  border-radius: 100%;
+  transition-duration: 250ms;
+}
+
+.main-header-top .reload-button:hover {
+  background-color: #f2f2f2;
+  transition-duration: 250ms;
+}
+
+.main-header-top .wrapper-input-url {
+  display: flex;
+  flex: 1;
+}
+
+.main-header-top .input-url {
+  width: 100%;
+  background-color: #f2f2f2;
+  padding: 10px 15px;
+  border-radius: 30px;
+  border: none;
+}
