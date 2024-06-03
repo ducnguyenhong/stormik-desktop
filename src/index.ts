@@ -53,7 +53,7 @@ const createWindow = (): void => {
     width: mainWindow.getContentBounds().width,
     height: 75
   });
-  headerView.webContents.loadURL('http://localhost:3000/header');
+  headerView.webContents.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   bodyView.setBounds({
     x: 0,
