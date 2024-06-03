@@ -1,7 +1,15 @@
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 const InputURL: React.FC = () => {
   const [url, setUrl] = useState<string>('');
+
+  useEffect(() => {
+    window.electronAPI.detectUrlChange((data: string) => setUrl(data));
+
+    window.electronAPI.receive('url-change', (data: string) => {
+      console.log(`Received ${data} from main process`);
+    });
+  }, []);
 
   return (
     <div className="wrapper-input-url">

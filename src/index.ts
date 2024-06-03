@@ -63,6 +63,11 @@ const createWindow = (): void => {
   });
   bodyView.webContents.loadURL('https://stormik.vercel.app/search');
 
+  bodyView.webContents.on('did-navigate-in-page', (e, url) => {
+    console.log('ducnh url', url);
+    mainWindow.webContents.send('url-change', url);
+  });
+
   // mainWindow.loadURL('https://stormik.vercel.app/search');
 
   // mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
