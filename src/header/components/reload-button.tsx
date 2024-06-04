@@ -2,7 +2,13 @@ import { memo } from 'react';
 
 const ReloadButton: React.FC = () => {
   return (
-    <button type="button" className="reload-button">
+    <button
+      type="button"
+      className="reload-button"
+      onClick={() => {
+        window.electronAPI.reload();
+      }}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

@@ -1,12 +1,9 @@
 import { memo } from 'react';
+import { HOME_DOMAIN } from '../../utils/const';
 
 const HomeButton: React.FC = () => {
   return (
-    <button
-      type="button"
-      className="home-button"
-      onClick={() => window.electronAPI.enterUrl('https://stormik.vercel.app/search')}
-    >
+    <button type="button" className="home-button" onClick={() => window.electronAPI.enterUrl(HOME_DOMAIN)}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

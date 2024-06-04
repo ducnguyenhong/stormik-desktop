@@ -4,11 +4,23 @@ const InputURL: React.FC = () => {
   const [url, setUrl] = useState<string>('');
 
   useEffect(() => {
-    window.electronAPI.detectUrlChange((data: string) => setUrl(data));
+    window.electronAPI.detectUrlChange((data: string) => {
+      console.log('ducnh1234', data);
 
-    window.electronAPI.receive('url-change', (data: string) => {
-      console.log(`Received ${data} from main process`);
+      setUrl(data);
     });
+
+    // window.electronAPI.receive('url-change', (data: string) => {
+    //   console.log(`Received ${data} from main process`);
+    // });
+
+    // window.addEventListener(
+    //   'message',
+    //   (event) => {
+    //     console.log('ducnh e', event.data);
+    //   },
+    //   false
+    // );
   }, []);
 
   return (
