@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   nextPage: () => ipcRenderer.send('next-page'),
   changeTab: (id: string) => ipcRenderer.send('change-tab', id),
   newTab: () => ipcRenderer.send('new-tab'),
+  closeTab: (data: { id: string; isCurrentTab: boolean }) => ipcRenderer.send('close-tab', data),
 
   // detectUrlChange: (callback: (data: string) => void) => {
   //   console.log('ducnh callback', callback);

@@ -19,7 +19,7 @@ if (require('electron-squirrel-startup')) {
 
 const createWindow = (): void => {
   let currentTabId = '';
-  const tabList: any[] = [];
+  let tabList: any[] = [];
 
   const mainWindow = new BrowserWindow({
     x: 0,
@@ -72,6 +72,7 @@ const createWindow = (): void => {
     width: mainWindow.getContentBounds().width,
     height: mainWindow.getContentBounds().height - 110
   });
+
   bodyView.webContents.loadURL(HOME_DOMAIN).then(() => {
     const newTabId = uuidV4();
     store.set(TABS_STORE_KEY, [
@@ -113,10 +114,6 @@ const createWindow = (): void => {
     store.set(TABS_STORE_KEY, newTabList);
   });
 
-  // mainWindow.webContents.send('url-change', 'url1234');
-
-  // mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-
   ipcMain.on('url-enter', (e, data) => {
     bodyView.webContents.loadURL(data);
   });
@@ -127,15 +124,13 @@ const createWindow = (): void => {
   });
 
   ipcMain.on('new-tab', () => {
-    // headerView.webContents.send('detect-new-tab', uuidV4());
-    // bodyView.webContents.loadURL(HOME_DOMAIN);
     const newBodyView = new WebContentsView({
       webPreferences: {
         preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
         sandbox: true
       }
     });
-    mainWindow.contentView.addChildView(newBodyView, 2);
+    mainWindow.contentView.addChildView(newBodyView, tabList.length + 1);
 
     newBodyView.setBounds({
       x: 0,
@@ -149,7 +144,7 @@ const createWindow = (): void => {
     tabList.push({
       id: newTabId,
       view: newBodyView,
-      index: 1
+      index: tabList.length
     });
 
     newBodyView.webContents.loadURL(HOME_DOMAIN).then(() => {
@@ -167,6 +162,36 @@ const createWindow = (): void => {
       currentTabId = newTabId;
       headerView.webContents.send('detect-new-tab', newTabId);
     });
+
+    newBodyView.webContents.on('devtools-closed', () => {
+      const showDevtool = store.get(SHOW_DEVTOOL_STORE_KEY);
+      if (showDevtool) {
+        store.set(SHOW_DEVTOOL_STORE_KEY, false);
+      }
+    });
+
+    // Open the DevTools.
+    newBodyView.webContents.on('before-input-event', (event, input) => {
+      if (input.key === 'F12') {
+        event.preventDefault();
+        const showDevtool = store.get(SHOW_DEVTOOL_STORE_KEY);
+        if (showDevtool) {
+          store.set(SHOW_DEVTOOL_STORE_KEY, false);
+          headerView.webContents.closeDevTools();
+        } else {
+          store.set(SHOW_DEVTOOL_STORE_KEY, true);
+          headerView.webContents.openDevTools();
+        }
+      }
+    });
+
+    for (let i = 0; i < tabList.length; i++) {
+      if (i === tabList.length - 1) {
+        tabList?.[i].view?.setVisible(true);
+      } else {
+        tabList?.[i].view?.setVisible(false);
+      }
+    }
   });
 
   ipcMain.on('change-tab', (e, tabId: string) => {
@@ -174,14 +199,6 @@ const createWindow = (): void => {
     const currentTab = tabList.find((i) => i.id === tabId);
 
     if (currentTab) {
-      // currentTab?.view?.webContents?.focus();
-      // currentTab.webContents.goToIndex(currentTab?.index);
-      console.log('ducnh currentTab?.index', currentTab?.index);
-
-      // mainWindow.webContents.goToIndex(currentTab?.index);
-
-      console.log('ducnh oldTabList', oldTabList);
-
       for (let i = 0; i < tabList.length; i++) {
         if (i === currentTab?.index) {
           tabList?.[i].view?.setVisible(true);
@@ -189,11 +206,6 @@ const createWindow = (): void => {
           tabList?.[i].view?.setVisible(false);
         }
       }
-
-      // currentTab?.view?.setVisible(false);
-      // currentTab.view.webContents.goToIndex(currentTab?.index);
-
-      // console.log('ducnh currentTab', currentTab.id);
     }
 
     const tabClicked = oldTabList.find((tab) => tab.id === tabId);
@@ -208,18 +220,31 @@ const createWindow = (): void => {
         return tab;
       });
       store.set(TABS_STORE_KEY, newTabList);
-      // bodyView.webContents.loadURL(tabClicked.url).then(() => {
-      //   const newTabList = oldTabList.map((tab) => {
-      //     if (tab.id === tabId) {
-      //       tab.isActive = true;
-      //     } else {
-      //       tab.isActive = false;
-      //     }
-      //     return tab;
-      //   });
-      //   store.set(TABS_STORE_KEY, newTabList);
-      // });
     }
+  });
+
+  ipcMain.on('close-tab', (e, data: any) => {
+    const { id: tabId, isCurrentTab } = data;
+    const oldTabList: Tab[] = store.get(TABS_STORE_KEY) || [];
+    const currentTabIndex = tabList.findIndex((i) => i.id === tabId);
+    if (currentTabIndex) {
+      tabList?.[currentTabIndex]?.webContents?.close();
+      tabList?.[currentTabIndex].view?.setVisible(false);
+    }
+
+    tabList = tabList.filter((i) => i.id !== tabId);
+
+    if (isCurrentTab) {
+      for (let i = 0; i < tabList.length; i++) {
+        if (i === 0) {
+          tabList?.[i].view?.setVisible(true);
+        } else {
+          tabList?.[i].view?.setVisible(false);
+        }
+      }
+    }
+    const newTabList = oldTabList.filter((i) => i.id === tabId);
+    store.set(TABS_STORE_KEY, newTabList);
   });
 
   ipcMain.on('prev-page', () => {
