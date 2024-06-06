@@ -1,27 +1,27 @@
-import { memo, useEffect, useState } from 'react';
+import { memo, useState } from 'react';
 
 const InputURL: React.FC = () => {
   const [url, setUrl] = useState<string>('');
 
-  useEffect(() => {
-    window.electronAPI.detectUrlChange((data: string) => {
-      console.log('ducnh1234', data);
+  // useEffect(() => {
+  //   window.electronAPI.detectUrlChange((data: string) => {
+  //     console.log('ducnh1234', data);
 
-      setUrl(data);
-    });
+  //     setUrl(data);
+  //   });
 
-    // window.electronAPI.receive('url-change', (data: string) => {
-    //   console.log(`Received ${data} from main process`);
-    // });
+  //   // window.electronAPI.receive('url-change', (data: string) => {
+  //   //   console.log(`Received ${data} from main process`);
+  //   // });
 
-    // window.addEventListener(
-    //   'message',
-    //   (event) => {
-    //     console.log('ducnh e', event.data);
-    //   },
-    //   false
-    // );
-  }, []);
+  //   // window.addEventListener(
+  //   //   'message',
+  //   //   (event) => {
+  //   //     console.log('ducnh e', event.data);
+  //   //   },
+  //   //   false
+  //   // );
+  // }, []);
 
   return (
     <div className="wrapper-input-url">

@@ -2,7 +2,13 @@ import { memo } from 'react';
 
 const PrevButton: React.FC = () => {
   return (
-    <button type="button" className="prev-button">
+    <button
+      type="button"
+      className="prev-button"
+      onClick={() => {
+        window.electronAPI.prevPage();
+      }}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

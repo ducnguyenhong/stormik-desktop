@@ -5,6 +5,7 @@ export interface History {
   domain: string;
   id: string;
   accessedAt: number;
+  isActive?: boolean;
 }
 
 export interface HistoryCreate {

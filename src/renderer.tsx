@@ -29,13 +29,7 @@
 // import './main/app';
 import { createRoot } from 'react-dom/client';
 import Header from './header';
-import './index.css';
-
-window.electronAPI.detectUrlChange((data: string) => {
-  console.log('ducnh12345678', data);
-
-  // setUrl(data);
-});
+import './header/header.css';
 
 const root = createRoot(document.getElementById('header'));
 root.render(<Header />);

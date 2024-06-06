@@ -1,13 +1,17 @@
+* {
+  font-family: 'Quicksand', sans-serif;
+}
+
 .main-header {
   width: 100%;
   position: fixed;
   top: 0;
   left: 0;
   background-color: #fff;
-  height: 75px;
+  height: 110px;
 }
 
-.main-header-top {
+.main-header-control {
   display: flex;
   align-items: center;
   column-gap: 5px;
@@ -15,13 +19,13 @@
   height: 35px;
 }
 
-.main-header-top .button-control {
+.main-header-control .button-control {
   display: flex;
   align-items: center;
   gap: 5px;
 }
 
-.main-header-top .prev-button {
+.main-header-control .prev-button {
   width: 30px;
   height: 30px;
   background-color: #fff;
@@ -30,12 +34,12 @@
   transition-duration: 250ms;
 }
 
-.main-header-top .prev-button:hover {
+.main-header-control .prev-button:hover {
   background-color: #f2f2f2;
   transition-duration: 250ms;
 }
 
-.main-header-top .next-button {
+.main-header-control .next-button {
   width: 30px;
   height: 30px;
   background-color: #fff;
@@ -44,27 +48,12 @@
   transition-duration: 250ms;
 }
 
-.main-header-top .next-button:hover {
+.main-header-control .next-button:hover {
   background-color: #f2f2f2;
   transition-duration: 250ms;
 }
 
-.main-header-top .home-button {
-  width: 30px;
-  height: 30px;
-  background-color: #fff;
-  border: none;
-  border-radius: 100%;
-  transition-duration: 250ms;
-  margin-right: 5px;
-}
-
-.main-header-top .home-button:hover {
-  background-color: #f2f2f2;
-  transition-duration: 250ms;
-}
-
-.main-header-top .more-button {
+.main-header-control .home-button {
   width: 30px;
   height: 30px;
   background-color: #fff;
@@ -74,12 +63,27 @@
   margin-right: 5px;
 }
 
-.main-header-top .more-button:hover {
+.main-header-control .home-button:hover {
   background-color: #f2f2f2;
   transition-duration: 250ms;
 }
 
-.main-header-top .reload-button {
+.main-header-control .more-button {
+  width: 30px;
+  height: 30px;
+  background-color: #fff;
+  border: none;
+  border-radius: 100%;
+  transition-duration: 250ms;
+  margin-right: 5px;
+}
+
+.main-header-control .more-button:hover {
+  background-color: #f2f2f2;
+  transition-duration: 250ms;
+}
+
+.main-header-control .reload-button {
   width: 30px;
   height: 30px;
   background-color: #fff;
@@ -88,17 +92,17 @@
   transition-duration: 250ms;
 }
 
-.main-header-top .reload-button:hover {
+.main-header-control .reload-button:hover {
   background-color: #f2f2f2;
   transition-duration: 250ms;
 }
 
-.main-header-top .wrapper-input-url {
+.main-header-control .wrapper-input-url {
   display: flex;
   flex: 1;
 }
 
-.main-header-top .input-url {
+.main-header-control .input-url {
   width: 100%;
   background-color: #f2f2f2;
   padding: 10px 15px;

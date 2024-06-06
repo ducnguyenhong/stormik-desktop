@@ -5,9 +5,22 @@ import { contextBridge, ipcRenderer } from 'electron';
 contextBridge.exposeInMainWorld('electronAPI', {
   enterUrl: (url: string) => ipcRenderer.send('url-enter', url),
   reload: () => ipcRenderer.send('reload'),
-  detectUrlChange: (callback: (data: string) => void) => {
-    console.log('ducnh callback', callback);
+  prevPage: () => ipcRenderer.send('prev-page'),
+  nextPage: () => ipcRenderer.send('next-page'),
+  changeTab: (id: string) => ipcRenderer.send('change-tab', id),
+  newTab: () => ipcRenderer.send('new-tab'),
 
-    ipcRenderer.on('url-change', (e, data) => callback(data));
-  }
+  // detectUrlChange: (callback: (data: string) => void) => {
+  //   console.log('ducnh callback', callback);
+
+  //   ipcRenderer.on('url-change', (e, data) => callback(data));
+  // },
+  // detectTabChange: (channel: string, callback: (data: Tab[]) => void) => {
+  //   console.log('ducnh huhu');
+  //   return ipcRenderer.on(channel, (e, data) => callback(data));
+  // },
+
+  detectTabChange: (callback: any) => ipcRenderer.on('detect-tab-change', (_event, value) => callback(value)),
+
+  detectNewTab: (callback: any) => ipcRenderer.on('detect-new-tab', (_event, value) => callback(value))
 });
