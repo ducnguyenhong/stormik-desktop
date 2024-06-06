@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain, WebContentsView } from 'electron';
 import Store from 'electron-store';
 import { v4 as uuidV4 } from 'uuid';
 import packageJson from '../package.json';
+import { createNewTab } from './function/tab';
 import { Tab } from './types/tab.type';
 import { HOME_DOMAIN, SHOW_DEVTOOL_STORE_KEY, TABS_STORE_KEY } from './utils/const';
 import { addHistory, getDomainName, getLastHistory } from './utils/helper';
@@ -98,6 +99,13 @@ const createWindow = (): void => {
     // bodyView.webContents.send('url-change', url);
   });
 
+  bodyView.webContents.setWindowOpenHandler((data) => {
+    createNewTab(mainWindow, headerView, tabList, store, MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY, data.url, (id) => {
+      currentTabId = id;
+    });
+    return { action: 'deny' };
+  });
+
   bodyView.webContents.on('did-navigate', () => {
     addHistory(store, {
       url: bodyView.webContents.getURL(),
@@ -125,74 +133,9 @@ const createWindow = (): void => {
   });
 
   ipcMain.on('new-tab', () => {
-    const newBodyView = new WebContentsView({
-      webPreferences: {
-        preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-        sandbox: true
-      }
+    createNewTab(mainWindow, headerView, tabList, store, MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY, HOME_DOMAIN, (id) => {
+      currentTabId = id;
     });
-    mainWindow.contentView.addChildView(newBodyView, tabList.length + 1);
-
-    newBodyView.setBounds({
-      x: 0,
-      y: 110,
-      width: mainWindow.getContentBounds().width,
-      height: mainWindow.getContentBounds().height - 110
-    });
-
-    const newTabId = uuidV4();
-
-    tabList.push({
-      id: newTabId,
-      view: newBodyView,
-      index: tabList.length
-    });
-
-    newBodyView.webContents.loadURL(HOME_DOMAIN).then(() => {
-      const oldTabList: Tab[] = store.get(TABS_STORE_KEY) || [];
-
-      store.set(TABS_STORE_KEY, [
-        ...oldTabList.map((i) => ({ ...i, isActive: false })),
-        {
-          title: 'Thẻ mới',
-          url: HOME_DOMAIN,
-          id: newTabId,
-          isActive: true
-        }
-      ]);
-      currentTabId = newTabId;
-      headerView.webContents.send('detect-new-tab', newTabId);
-    });
-
-    newBodyView.webContents.on('devtools-closed', () => {
-      const showDevtool = store.get(SHOW_DEVTOOL_STORE_KEY);
-      if (showDevtool) {
-        store.set(SHOW_DEVTOOL_STORE_KEY, false);
-      }
-    });
-
-    // Open the DevTools.
-    newBodyView.webContents.on('before-input-event', (event, input) => {
-      if (input.key === 'F12') {
-        event.preventDefault();
-        const showDevtool = store.get(SHOW_DEVTOOL_STORE_KEY);
-        if (showDevtool) {
-          store.set(SHOW_DEVTOOL_STORE_KEY, false);
-          headerView.webContents.closeDevTools();
-        } else {
-          store.set(SHOW_DEVTOOL_STORE_KEY, true);
-          headerView.webContents.openDevTools();
-        }
-      }
-    });
-
-    for (let i = 0; i < tabList.length; i++) {
-      if (i === tabList.length - 1) {
-        tabList?.[i].view?.setVisible(true);
-      } else {
-        tabList?.[i].view?.setVisible(false);
-      }
-    }
   });
 
   ipcMain.on('change-tab', (e, tabId: string) => {
