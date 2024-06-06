@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain, WebContentsView } from 'electron';
 import Store from 'electron-store';
 import { v4 as uuidV4 } from 'uuid';
+import packageJson from '../package.json';
 import { Tab } from './types/tab.type';
 import { HOME_DOMAIN, SHOW_DEVTOOL_STORE_KEY, TABS_STORE_KEY } from './utils/const';
 import { addHistory, getDomainName, getLastHistory } from './utils/helper';
@@ -32,7 +33,7 @@ const createWindow = (): void => {
       webviewTag: true
       // contextIsolation: true
     },
-    title: 'Trình duyệt Stormik'
+    title: `Trình duyệt Stormik - ${packageJson.version}`
   });
 
   mainWindow.removeMenu();
