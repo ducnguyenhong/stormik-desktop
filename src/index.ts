@@ -86,7 +86,7 @@ const createWindow = (): void => {
     tabList.push({
       id: newTabId,
       view: bodyView,
-      index: 1
+      index: 0
     });
     headerView.webContents.send('detect-new-tab', newTabId);
   });
@@ -149,7 +149,7 @@ const createWindow = (): void => {
     tabList.push({
       id: newTabId,
       view: newBodyView,
-      index: 2
+      index: 1
     });
 
     newBodyView.webContents.loadURL(HOME_DOMAIN).then(() => {
@@ -167,8 +167,6 @@ const createWindow = (): void => {
       currentTabId = newTabId;
       headerView.webContents.send('detect-new-tab', newTabId);
     });
-
-    newBodyView.setVisible(false);
   });
 
   ipcMain.on('change-tab', (e, tabId: string) => {
@@ -182,7 +180,17 @@ const createWindow = (): void => {
 
       // mainWindow.webContents.goToIndex(currentTab?.index);
 
-      // currentTab.webContents.setVisible(true);
+      console.log('ducnh oldTabList', oldTabList);
+
+      for (let i = 0; i < tabList.length; i++) {
+        if (i === currentTab?.index) {
+          tabList?.[i].view?.setVisible(true);
+        } else {
+          tabList?.[i].view?.setVisible(false);
+        }
+      }
+
+      // currentTab?.view?.setVisible(false);
       // currentTab.view.webContents.goToIndex(currentTab?.index);
 
       // console.log('ducnh currentTab', currentTab.id);
