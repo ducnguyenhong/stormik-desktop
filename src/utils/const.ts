@@ -1,4 +1,4 @@
-export const HOME_DOMAIN = 'https://stormik.vercel.app/search';
+export const HOME_DOMAIN = 'https://stormik.org/search';
 
 export const HISTORY_ALL_STORE_KEY = 'history-all';
 

@@ -42,7 +42,7 @@ const config: ForgeConfig = {
           //   }
           // },
           {
-            html: './src/header/header.html',
+            html: './src/renderer/control/control.html',
             js: './src/renderer.tsx',
             name: 'main_window',
             preload: {

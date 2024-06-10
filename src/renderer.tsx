@@ -26,10 +26,9 @@
  * ```
  */
 
-// import './main/app';
 import { createRoot } from 'react-dom/client';
-import Header from './header';
-import './header/header.css';
+import './index.css';
+import Control from './renderer/control';
 
-const root = createRoot(document.getElementById('header'));
-root.render(<Header />);
+const root = createRoot(document.getElementById('control'));
+root.render(<Control />);

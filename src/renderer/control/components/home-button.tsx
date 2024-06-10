@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { HOME_DOMAIN } from '../../utils/const';
+import { HOME_DOMAIN } from '../../../utils/const';
 
 const HomeButton: React.FC = () => {
   return (

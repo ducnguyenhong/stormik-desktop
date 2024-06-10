@@ -127,7 +127,7 @@ const createWindow = (): void => {
     bodyView.webContents.loadURL(data);
   });
 
-  ipcMain.on('reload', () => {
+  ipcMain.on('reload-page', () => {
     bodyView.webContents.reload();
     bodyView.webContents.scrollToTop();
   });

@@ -4,7 +4,7 @@ import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('electronAPI', {
   enterUrl: (url: string) => ipcRenderer.send('url-enter', url),
-  reload: () => ipcRenderer.send('reload'),
+  reloadPage: () => ipcRenderer.send('reload-page'),
   prevPage: () => ipcRenderer.send('prev-page'),
   nextPage: () => ipcRenderer.send('next-page'),
   changeTab: (id: string) => ipcRenderer.send('change-tab', id),
