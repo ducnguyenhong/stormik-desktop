@@ -9,3 +9,8 @@ export interface Tab {
   view?: WebContentsView;
   isLoading?: boolean;
 }
+
+export interface TabContentView {
+  view: WebContentsView;
+  tabId: string;
+}

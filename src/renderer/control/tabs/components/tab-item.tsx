@@ -14,13 +14,6 @@ const TabItem: React.FC<TabItemProps> = (props) => {
 
   const onClickTab = useCallback(
     (id: string) => {
-      const newTabList = tabs.map((tab) => {
-        if (tab.id === id) {
-          return { ...tab, isActive: true };
-        }
-        return { ...tab, isActive: false };
-      });
-      setTabs(newTabList);
       window.electronAPI.changeTab(id);
     },
     [tabs]

@@ -7,6 +7,8 @@ import TabItem from './components/tab-item';
 const Tabs: React.FC = () => {
   const [tabs, setTabs] = useState<Tab[]>([]);
 
+  console.log('ducnh tabs', tabs);
+
   useEffect(() => {
     window.electronAPI.effectTabChange((tabsData: Tab[]) => {
       setTabs(tabsData);

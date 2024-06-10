@@ -10,3 +10,5 @@ export const SHOW_DEVTOOL_STORE_KEY = 'show-devtool';
 export const BOOKMARK_STORE_KEY = 'bookmark';
 
 export const TABS_STORE_KEY = 'tabs';
+
+export const CURRENT_TAB_ID_STORE_KEY = 'current-tab-id';
