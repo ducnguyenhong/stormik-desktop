@@ -30,6 +30,7 @@ const config: ForgeConfig = {
     new AutoUnpackNativesPlugin({}),
     new WebpackPlugin({
       mainConfig,
+      devContentSecurityPolicy: "img-src * 'self' data: https:;",
       renderer: {
         config: rendererConfig,
         entryPoints: [

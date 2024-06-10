@@ -14,6 +14,8 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 const store: any = new Store();
 
+const CONTROL_HEIGHT = 115; // px
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit();
@@ -64,15 +66,15 @@ const createWindow = (): void => {
     x: 0,
     y: 0,
     width: mainWindow.getContentBounds().width,
-    height: 110
+    height: CONTROL_HEIGHT
   });
   headerView.webContents.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   bodyView.setBounds({
     x: 0,
-    y: 110,
+    y: CONTROL_HEIGHT,
     width: mainWindow.getContentBounds().width,
-    height: mainWindow.getContentBounds().height - 110
+    height: mainWindow.getContentBounds().height - CONTROL_HEIGHT
   });
 
   bodyView.webContents.loadURL(HOME_DOMAIN).then(() => {
