@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, WebContentsView } from 'electron';
 import Store from 'electron-store';
 import { v4 as uuidV4 } from 'uuid';
 import packageJson from '../package.json';
-import { createNewTab } from './function/tab';
+import { createNewTab, effectChangeTabs } from './function/tab';
 import { Tab } from './types/tab.type';
 import { HOME_DOMAIN, SHOW_DEVTOOL_STORE_KEY, TABS_STORE_KEY } from './utils/const';
 import { addHistory, getDomainName, getLastHistory } from './utils/helper';
@@ -14,7 +14,7 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 const store: any = new Store();
 
-const CONTROL_HEIGHT = 115; // px
+export const CONTROL_HEIGHT = 115; // px
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -23,7 +23,7 @@ if (require('electron-squirrel-startup')) {
 
 const createWindow = (): void => {
   let currentTabId = '';
-  let tabList: any[] = [];
+  let tabList: Tab[] = [];
 
   const mainWindow = new BrowserWindow({
     x: 0,
@@ -60,7 +60,7 @@ const createWindow = (): void => {
     }
   });
   mainWindow.contentView.addChildView(headerView);
-  mainWindow.contentView.addChildView(bodyView, 1);
+  mainWindow.contentView.addChildView(bodyView, 0);
 
   headerView.setBounds({
     x: 0,
@@ -88,17 +88,35 @@ const createWindow = (): void => {
       }
     ]);
     currentTabId = newTabId;
+    // tabList.push({
+    //   id: newTabId,
+    //   view: bodyView,
+    //   index: 0
+    // });
+    // headerView.webContents.send('detect-new-tab', newTabId);
+
     tabList.push({
       id: newTabId,
       view: bodyView,
-      index: 0
+      index: 0,
+      isActive: true,
+      title: 'Thẻ mới',
+      url: HOME_DOMAIN,
+      isLoading: false
     });
-    headerView.webContents.send('detect-new-tab', newTabId);
+
+    effectChangeTabs(headerView, tabList);
   });
 
   bodyView.webContents.on('will-navigate', (e, url) => {
-    // mainWindow.webContents.send('url-change', url);
-    // bodyView.webContents.send('url-change', url);
+    tabList = tabList.map((item) => {
+      if (item.isActive) {
+        return { ...item, url, isLoading: true };
+      }
+      return item;
+    });
+
+    effectChangeTabs(headerView, tabList);
   });
 
   bodyView.webContents.setWindowOpenHandler((data) => {
@@ -116,16 +134,46 @@ const createWindow = (): void => {
       title: bodyView.webContents.getTitle()
     });
     const oldTabList: Tab[] = store.get(TABS_STORE_KEY) || [];
-    const newTabList = oldTabList.map((tab) => {
-      if (tab.id === currentTabId) {
-        tab.url = bodyView.webContents.getURL();
+    // const newTabList = oldTabList.map((tab) => {
+    //   if (tab.id === currentTabId) {
+    //     tab.url = bodyView.webContents.getURL();
+    //   }
+    //   return tab;
+    // });
+
+    tabList = tabList.map((item) => {
+      if (item.isActive) {
+        return {
+          ...item,
+          url: bodyView.webContents.getURL(),
+          title: bodyView.webContents.getTitle(),
+          isLoading: true
+        };
       }
-      return tab;
+      return item;
     });
-    store.set(TABS_STORE_KEY, newTabList);
+    effectChangeTabs(headerView, tabList);
+  });
+
+  bodyView.webContents.on('did-finish-load', () => {
+    tabList = tabList.map((item) => {
+      if (item.isActive) {
+        return {
+          ...item,
+          title: bodyView.webContents.getTitle(),
+          isLoading: false
+        };
+      }
+      return item;
+    });
+    effectChangeTabs(headerView, tabList);
   });
 
   ipcMain.on('url-enter', (e, data) => {
+    bodyView.webContents.loadURL(data);
+  });
+
+  ipcMain.on('load-bookmark-url', (e, data) => {
     bodyView.webContents.loadURL(data);
   });
 
@@ -174,7 +222,7 @@ const createWindow = (): void => {
     const oldTabList: Tab[] = store.get(TABS_STORE_KEY) || [];
     const currentTabIndex = tabList.findIndex((i) => i.id === tabId);
     if (currentTabIndex) {
-      tabList?.[currentTabIndex]?.webContents?.close();
+      // tabList?.[currentTabIndex]?.webContents?.close();
       tabList?.[currentTabIndex].view?.setVisible(false);
     }
 

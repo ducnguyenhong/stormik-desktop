@@ -1,4 +1,5 @@
-import { memo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
+import { Tab } from '../../../types/tab.type';
 import ProtectButton from './components/protect-button';
 
 const InputURL: React.FC = () => {
@@ -24,10 +25,19 @@ const InputURL: React.FC = () => {
   //   // );
   // }, []);
 
+  useEffect(() => {
+    window.electronAPI.effectTabChange((tabsData: Tab[]) => {
+      const currentTab = tabsData.find((i) => i.isActive);
+      if (currentTab?.url) {
+        setUrl(currentTab?.url);
+      }
+    });
+  }, []);
+
   return (
     <div className="flex relative flex-1 h-full pr-10">
       <input
-        className="bg-[#f2f2f2] pb-[3px] text-[#595959] flex-1 border-none rounded-full h-full px-[34px] focus:border focus:bg-white focus:outline-[#38a643]"
+        className="bg-[#f2f2f2] pb-[3px] text-[#595959] text-[14px] flex-1 border-none rounded-full h-full px-[34px] focus:border focus:bg-white focus:outline-[#38a643]"
         type="text"
         value={url}
         onChange={(e) => setUrl(e.target.value)}

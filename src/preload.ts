@@ -1,9 +1,11 @@
 // See the Electron documentation for details on how to use preload scripts:
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 import { contextBridge, ipcRenderer } from 'electron';
+import { Tab } from './types/tab.type';
 
 contextBridge.exposeInMainWorld('electronAPI', {
   enterUrl: (url: string) => ipcRenderer.send('url-enter', url),
+  loadBookmarkUrl: (url: string) => ipcRenderer.send('load-bookmark-url', url),
   reloadPage: () => ipcRenderer.send('reload-page'),
   prevPage: () => ipcRenderer.send('prev-page'),
   nextPage: () => ipcRenderer.send('next-page'),
@@ -21,7 +23,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   //   return ipcRenderer.on(channel, (e, data) => callback(data));
   // },
 
-  detectTabChange: (callback: any) => ipcRenderer.on('detect-tab-change', (_event, value) => callback(value)),
-
-  detectNewTab: (callback: any) => ipcRenderer.on('detect-new-tab', (_event, value) => callback(value))
+  effectTabChange: (callback: (data: Tab[]) => void) =>
+    ipcRenderer.on('effect-tab-change', (_event, value) => callback(value))
 });

@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 
 const Bookmark: React.FC = () => {
   const DATA = [
@@ -24,6 +24,10 @@ const Bookmark: React.FC = () => {
     }
   ];
 
+  const onLoadBookmark = useCallback((url: string) => {
+    window.electronAPI.loadBookmarkUrl(url);
+  }, []);
+
   return (
     <div className="flex items-center gap-2 h-full px-2.5">
       {DATA.map((item) => {
@@ -32,7 +36,8 @@ const Bookmark: React.FC = () => {
           <div
             key={url}
             title={title}
-            className="flex pl-1 pr-2 cursor-default items-center gap-0.5 duration-200 rounded-full hover:bg-[#e6e6e6]"
+            onClick={() => onLoadBookmark(url)}
+            className="flex pl-1 pr-2 cursor-default items-center gap-0.5 duration-300 rounded-full hover:bg-[#f2f2f2]"
           >
             <div className="w-[28px] h-[28px] flex justify-center items-center">
               <img src={`https://www.google.com/s2/favicons?domain=${url}&sz=128`} className="w-4 h-4" />

@@ -1,4 +1,5 @@
-export const HOME_DOMAIN = 'https://stormik.org/search';
+export const HOME_DOMAIN = 'http://localhost:5000';
+// export const HOME_DOMAIN = 'https://stormik.org/search';
 
 export const HISTORY_ALL_STORE_KEY = 'history-all';
 

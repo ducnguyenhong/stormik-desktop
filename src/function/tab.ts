@@ -1,11 +1,12 @@
 import { WebContentsView } from 'electron';
 import { v4 as uuidV4 } from 'uuid';
+import { CONTROL_HEIGHT } from '../main';
 import { Tab } from '../types/tab.type';
 import { HOME_DOMAIN, SHOW_DEVTOOL_STORE_KEY, TABS_STORE_KEY } from '../utils/const';
 
 export const createNewTab = (
   mainWindow: any,
-  headerView: any,
+  headerView: WebContentsView,
   tabList: any,
   store: any,
   preloadUrl: string,
@@ -22,9 +23,9 @@ export const createNewTab = (
 
   newBodyView.setBounds({
     x: 0,
-    y: 110,
+    y: CONTROL_HEIGHT,
     width: mainWindow.getContentBounds().width,
-    height: mainWindow.getContentBounds().height - 110
+    height: mainWindow.getContentBounds().height - CONTROL_HEIGHT
   });
 
   const newTabId = uuidV4();
@@ -87,4 +88,11 @@ export const createNewTab = (
       tabList?.[i].view?.setVisible(false);
     }
   }
+};
+
+export const effectChangeTabs = (headerView: WebContentsView, tabsData: Tab[]) => {
+  headerView.webContents.send(
+    'effect-tab-change',
+    tabsData.map((i) => ({ ...i, view: undefined }))
+  );
 };
