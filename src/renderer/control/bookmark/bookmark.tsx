@@ -29,7 +29,7 @@ const Bookmark: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex items-center gap-2 h-full px-2.5">
+    <div className="flex items-center gap-2 h-full px-2.5 pb-[2px]">
       {DATA.map((item) => {
         const { title, url } = item;
         return (
