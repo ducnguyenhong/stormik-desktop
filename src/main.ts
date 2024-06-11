@@ -44,7 +44,7 @@ const createWindow = (): void => {
     // title: `Trình duyệt Stormik - ${packageJson.version}`,
     titleBarStyle: 'hidden',
     titleBarOverlay: {
-      color: '#d5e3fc',
+      color: '#e6e6e6',
       symbolColor: '#262626',
       height: 40
     }

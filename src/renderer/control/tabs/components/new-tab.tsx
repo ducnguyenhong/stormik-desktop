@@ -7,7 +7,7 @@ const NewTab: React.FC = () => {
 
   return (
     <div
-      className="rounded-full mx-1 mt-0.5 w-[26px] h-[26px] flex items-center justify-center duration-200 hover:bg-[#adc6f9]"
+      className="rounded-full mx-1 mt-0.5 w-[26px] h-[26px] flex items-center justify-center duration-200 hover:bg-[#f5f5f5]"
       onClick={onCreateNewTab}
       title="Thẻ mới"
     >

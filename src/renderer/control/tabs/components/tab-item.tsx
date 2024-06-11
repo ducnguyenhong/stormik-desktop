@@ -118,22 +118,22 @@ const TabItem: React.FC<TabItemProps> = (props) => {
       <div
         className={clsx('absolute bottom-0 left-[-8px] w-[8px] h-[8px]', {
           'bg-white': isActive,
-          'bg-[#d5e3fc]': !isActive
+          'bg-[#e6e6e6]': !isActive
         })}
       >
         <div className="relative w-full h-full">
-          <div className="bg-[#d5e3fc] w-full h-full rounded-br-full" />
+          <div className="bg-[#e6e6e6] w-full h-full rounded-br-full" />
         </div>
       </div>
 
       <div
         className={clsx('absolute bottom-0 right-[-8px] w-[8px] h-[8px]', {
           'bg-white': isActive,
-          'bg-[#d5e3fc]': !isActive
+          'bg-[#e6e6e6]': !isActive
         })}
       >
         <div className="relative w-full h-full">
-          <div className="bg-[#d5e3fc] w-full h-full rounded-bl-full" />
+          <div className="bg-[#e6e6e6] w-full h-full rounded-bl-full" />
         </div>
       </div>
     </div>

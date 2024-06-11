@@ -16,7 +16,7 @@ const Tabs: React.FC = () => {
   }, [tabs]);
 
   return (
-    <div className="flex items-center justify-between h-full bg-[#d5e3fc] pl-2 pr-[140px]">
+    <div className="flex items-center justify-between h-full bg-[#e6e6e6] pl-2 pr-[140px]">
       <div className="flex items-center h-full gap-1 py-1">
         <ManageTab />
 

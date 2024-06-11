@@ -5,26 +5,6 @@ import ProtectButton from './components/protect-button';
 const InputURL: React.FC = () => {
   const [url, setUrl] = useState<string>('');
 
-  // useEffect(() => {
-  //   window.electronAPI.detectUrlChange((data: string) => {
-  //     console.log('ducnh1234', data);
-
-  //     setUrl(data);
-  //   });
-
-  //   // window.electronAPI.receive('url-change', (data: string) => {
-  //   //   console.log(`Received ${data} from main process`);
-  //   // });
-
-  //   // window.addEventListener(
-  //   //   'message',
-  //   //   (event) => {
-  //   //     console.log('ducnh e', event.data);
-  //   //   },
-  //   //   false
-  //   // );
-  // }, []);
-
   useEffect(() => {
     window.electronAPI.effectTabChange((tabsData: Tab[]) => {
       const currentTab = tabsData.find((i) => i.isActive);
@@ -37,7 +17,7 @@ const InputURL: React.FC = () => {
   return (
     <div className="flex relative flex-1 h-full pr-10">
       <input
-        className="bg-[#f2f2f2] pb-[3px] text-[#595959] text-[14px] flex-1 border-none rounded-full h-full px-[34px] focus:border focus:bg-white focus:outline-[#38a643]"
+        className="bg-[#f7f7f8] border-[#e6e6e6] pb-[2px] text-[#595959] text-[14px] flex-1 border rounded-full h-full px-[31px] focus:border focus:bg-white focus:outline-[#38a643]"
         type="text"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
