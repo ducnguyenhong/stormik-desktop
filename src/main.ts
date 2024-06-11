@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, WebContentsView } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, WebContentsView } from 'electron';
 import Store from 'electron-store';
 import { v4 as uuidV4 } from 'uuid';
 import {
@@ -38,7 +38,8 @@ const createWindow = (): void => {
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       sandbox: true,
-      webviewTag: true
+      webviewTag: true,
+      nodeIntegration: true
       // contextIsolation: true
     },
     // title: `Trình duyệt Stormik - ${packageJson.version}`,
@@ -64,7 +65,7 @@ const createWindow = (): void => {
   const bodyView = new WebContentsView({
     webPreferences: {
       // contextIsolation: true,
-      // nodeIntegration: true,
+      nodeIntegration: true,
       // allowRunningInsecureContent: true,
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       sandbox: true
@@ -275,12 +276,50 @@ const createWindow = (): void => {
       const showDevtool = store.get(SHOW_DEVTOOL_STORE_KEY);
       if (showDevtool) {
         store.set(SHOW_DEVTOOL_STORE_KEY, false);
-        controlView.webContents.closeDevTools();
+        bodyView.webContents.closeDevTools();
       } else {
         store.set(SHOW_DEVTOOL_STORE_KEY, true);
-        controlView.webContents.openDevTools();
+        bodyView.webContents.openDevTools();
       }
     }
+  });
+
+  ipcMain.on('show-context-menu', (event) => {
+    const template: any[] = [
+      {
+        label: 'Quay lại                                      Atl + Mũi tên trái',
+        click: () => {
+          event.sender.send('context-menu-command', 'menu-item-1');
+        }
+      },
+      {
+        label: 'Tiến lên                                     Atl + Mũi tên phải',
+        click: () => {
+          event.sender.send('context-menu-command', 'menu-item-1');
+        }
+      },
+      {
+        label: 'Tải lại                                                         Ctrl + R',
+        click: () => {
+          event.sender.send('context-menu-command', 'menu-item-1');
+        }
+      },
+      { type: 'separator' },
+      {
+        label: 'Xem nguồn trang                                      Ctrl + U',
+        click: () => {
+          event.sender.send('context-menu-command', 'menu-item-1');
+        }
+      },
+      {
+        label: 'Kiểm tra                                                            F12',
+        click: () => {
+          event.sender.send('context-menu-command', 'menu-item-1');
+        }
+      }
+    ];
+    const menu = Menu.buildFromTemplate(template);
+    menu.popup({ window: BrowserWindow.fromWebContents(event.sender) });
   });
 };
 

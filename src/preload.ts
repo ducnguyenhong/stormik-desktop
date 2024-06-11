@@ -26,3 +26,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   effectTabChange: (callback: (data: Tab[]) => void) =>
     ipcRenderer.on('effect-tab-change', (_event, value) => callback(value))
 });
+
+window.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+  ipcRenderer.send('show-context-menu');
+});
