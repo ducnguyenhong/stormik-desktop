@@ -1,7 +1,6 @@
 import { app, BrowserWindow, ipcMain, WebContentsView } from 'electron';
 import Store from 'electron-store';
 import { v4 as uuidV4 } from 'uuid';
-import packageJson from '../package.json';
 import {
   createNewTab,
   effectChangeTabs,
@@ -21,7 +20,7 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 const store: any = new Store();
 
-export const CONTROL_HEIGHT = 115; // px
+export const CONTROL_HEIGHT = 115.5; // px
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -42,7 +41,13 @@ const createWindow = (): void => {
       webviewTag: true
       // contextIsolation: true
     },
-    title: `Trình duyệt Stormik - ${packageJson.version}`
+    // title: `Trình duyệt Stormik - ${packageJson.version}`,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: {
+      color: '#d5e3fc',
+      symbolColor: '#262626',
+      height: 40
+    }
   });
 
   mainWindow.removeMenu();

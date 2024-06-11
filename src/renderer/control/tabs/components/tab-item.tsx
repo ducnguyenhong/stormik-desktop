@@ -22,7 +22,7 @@ const TabItem: React.FC<TabItemProps> = (props) => {
   return (
     <div
       className={clsx(
-        'h-[33px] relative flex items-center px-2 gap-2.5 cursor-default rounded-t-xl w-[230px] justify-between',
+        'h-[35px] relative flex items-center px-2 gap-2.5 cursor-default rounded-t-xl w-[230px] justify-between',
         {
           'bg-white': isActive
         }

@@ -16,16 +16,18 @@ const Tabs: React.FC = () => {
   }, [tabs]);
 
   return (
-    <div className="flex items-center gap-1 py-1 h-full bg-[#d5e3fc] px-2">
-      <ManageTab />
+    <div className="flex items-center justify-between h-full bg-[#d5e3fc] pl-2 pr-[140px]">
+      <div className="flex items-center h-full gap-1 py-1">
+        <ManageTab />
 
-      <div className="pt-[4px] flex items-center gap-1">
-        {tabs.map((item, index) => {
-          return <TabItem key={index} item={item} tabs={tabs} setTabs={setTabs} />;
-        })}
+        <div className="pt-[4px] flex items-center gap-1">
+          {tabs.map((item, index) => {
+            return <TabItem key={index} item={item} tabs={tabs} setTabs={setTabs} />;
+          })}
+        </div>
+
+        <NewTab />
       </div>
-
-      <NewTab />
     </div>
   );
 };
