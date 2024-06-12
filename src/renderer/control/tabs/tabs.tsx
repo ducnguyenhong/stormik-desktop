@@ -22,7 +22,7 @@ const Tabs: React.FC = () => {
 
         <div className="pt-[4px] flex items-center gap-1">
           {tabs.map((item, index) => {
-            return <TabItem key={index} item={item} tabs={tabs} setTabs={setTabs} />;
+            return <TabItem key={index} item={item} tabs={tabs} />;
           })}
         </div>
 

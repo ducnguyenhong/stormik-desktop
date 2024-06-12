@@ -1,23 +1,27 @@
 import clsx from 'clsx';
 import { memo, useCallback } from 'react';
 import { Tab } from '../../../../types/tab.type';
+import { HOME_DOMAIN } from '../../../../utils/const';
 
 interface TabItemProps {
   item: Tab;
   tabs: Tab[];
-  setTabs: (tabs: Tab[]) => void;
 }
 
 const TabItem: React.FC<TabItemProps> = (props) => {
-  const { item, tabs, setTabs } = props;
+  const { item, tabs } = props;
   const { id, title, url, isActive, isLoading } = item;
+  const favicon = url.startsWith('view-source:') ? HOME_DOMAIN : url;
 
-  const onClickTab = useCallback(
-    (id: string) => {
-      window.electronAPI.changeTab(id);
-    },
-    [tabs]
-  );
+  const onClickTab = useCallback(() => {
+    console.log('ducnh haha');
+
+    window.electronAPI.changeTab(id);
+  }, [tabs, id]);
+
+  const onCloseTab = useCallback(() => {
+    window.electronAPI.closeTab(id);
+  }, [id]);
 
   return (
     <div
@@ -37,7 +41,7 @@ const TabItem: React.FC<TabItemProps> = (props) => {
           if (isActive) {
             return;
           }
-          onClickTab(id);
+          onClickTab();
         }}
       >
         {isLoading ? (
@@ -87,7 +91,7 @@ const TabItem: React.FC<TabItemProps> = (props) => {
             </svg>
           </p>
         ) : (
-          <img src={`https://www.google.com/s2/favicons?domain=${url}&sz=128`} className="w-4 h-4" />
+          <img src={`https://www.google.com/s2/favicons?domain=${favicon}&sz=128`} className="w-4 h-4" />
         )}
 
         <p className="font-medium text-[12px] line-clamp-1">{title}</p>
@@ -97,14 +101,7 @@ const TabItem: React.FC<TabItemProps> = (props) => {
         <div
           className="w-[19px] h-[19px] rounded-full flex items-center justify-center duration-200 hover:bg-red-200"
           title="Đóng thẻ"
-          onClick={() => {
-            window.electronAPI.closeTab({ id, isCurrentTab: isActive });
-            if (isActive) {
-              setTabs(tabs.filter((i) => i.id !== id).map((i, idx) => ({ ...i, isActive: idx === 0 })));
-              return;
-            }
-            setTabs(tabs.filter((i) => i.id !== id));
-          }}
+          onClick={onCloseTab}
         >
           <p className="w-[15px] h-[15px]">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#4f4f4f">

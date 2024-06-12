@@ -1,15 +1,24 @@
+import clsx from 'clsx';
 import { memo, useCallback } from 'react';
 
 const NextButton: React.FC = () => {
+  const isActive = false;
+
   const onNextPage = useCallback(() => {
+    if (!isActive) {
+      return;
+    }
     window.electronAPI.nextPage();
-  }, []);
+  }, [isActive]);
 
   return (
     <div
-      className="w-[32px] h-[32px] flex justify-center items-center duration-200 hover:bg-[#f2f2f2] rounded-full"
+      className={clsx('w-[32px] h-[32px] flex justify-center items-center duration-200 rounded-full', {
+        'opacity-20': !isActive,
+        'hover:bg-[#f2f2f2]': isActive
+      })}
       onClick={onNextPage}
-      title="Tiến lên"
+      title="Coming soon"
     >
       <p className="w-[25px] h-[25px]">
         <svg fill="#262626" viewBox="0 0 16 16">
