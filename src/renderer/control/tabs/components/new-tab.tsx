@@ -6,7 +6,6 @@ const NewTab: React.FC = () => {
   const setIsNewTab = useSetRecoilState(isNewTabAtom);
 
   const onCreateNewTab = useCallback(() => {
-    setIsNewTab(true);
     window.electronAPI.newTab();
   }, [setIsNewTab]);
 

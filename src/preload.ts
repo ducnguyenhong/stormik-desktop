@@ -18,18 +18,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   newTab: () => ipcRenderer.send('new-tab'),
   closeTab: (id: string) => ipcRenderer.send('close-tab', id),
 
-  // detectUrlChange: (callback: (data: string) => void) => {
-  //   console.log('ducnh callback', callback);
-
-  //   ipcRenderer.on('url-change', (e, data) => callback(data));
-  // },
-  // detectTabChange: (channel: string, callback: (data: Tab[]) => void) => {
-  //   console.log('ducnh huhu');
-  //   return ipcRenderer.on(channel, (e, data) => callback(data));
-  // },
-
   effectTabChange: (callback: (data: Tab[]) => void) =>
     ipcRenderer.on('effect-tab-change', (_event, value) => callback(value)),
+
+  effectNewTab: (callback: (data: boolean) => void) =>
+    ipcRenderer.on('effect-new-tab', (_event, value) => callback(value)),
+
   effectChangeBookmarks: (callback: (data: Bookmark[]) => void) =>
     ipcRenderer.on('effect-bookmark-change', (_event, value) => callback(value))
 });

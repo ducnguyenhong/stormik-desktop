@@ -42,6 +42,8 @@ const createWindow = (): void => {
 
   // setBookmarkList(store, []);
 
+  setTabList(store, []);
+
   // store.set(INCOGNITO_KEY, false);
 
   const isIncognito = store.get(INCOGNITO_KEY);
@@ -129,6 +131,9 @@ const createWindow = (): void => {
     addTabsLength(store);
     setTabList(store, newTabList);
     effectChangeTabs(controlView, newTabList);
+    setTimeout(() => {
+      controlView.webContents.send('effect-new-tab', true);
+    }, 1000);
 
     const bookmarkList = getBookmarkList(store);
     const defaultBookmarkList = bookmarkList.length ? bookmarkList : DEFAULT_BOOKMARK_LIST;

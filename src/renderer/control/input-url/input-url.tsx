@@ -1,20 +1,22 @@
 import { memo, useEffect, useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import { Tab } from '../../../types/tab.type';
 import { HOME_DOMAIN_INCOGNITO, HOME_DOMAIN_NORMAL } from '../../../utils/const';
+import { isNewTabAtom } from '../control.recoil';
 import BookmarkButton from './components/bookmark-button';
 import ProtectButton from './components/protect-button';
 
 const InputURL: React.FC = () => {
   const [url, setUrl] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
-  // const [isNewTab, setIsNewTab] = useRecoilState(isNewTabAtom);
+  const [isNewTab, setIsNewTab] = useRecoilState(isNewTabAtom);
 
-  // useEffect(() => {
-  //   if (isNewTab) {
-  //     inputRef.current?.select();
-  //     setIsNewTab(false);
-  //   }
-  // }, [isNewTab, setIsNewTab]);
+  useEffect(() => {
+    if (isNewTab) {
+      // inputRef?.current?.focus();
+      // setIsNewTab(false);
+    }
+  }, [isNewTab, setIsNewTab]);
 
   useEffect(() => {
     window.electronAPI.effectTabChange((tabsData: Tab[]) => {
@@ -33,6 +35,7 @@ const InputURL: React.FC = () => {
         type="text"
         value={url === HOME_DOMAIN_NORMAL || url === HOME_DOMAIN_INCOGNITO ? '' : url}
         onFocus={() => inputRef.current?.select()}
+        onBlur={() => inputRef.current?.blur()}
         placeholder="Tìm kiếm hoặc nhập một URL"
         onChange={(e) => setUrl(e.target.value)}
         onKeyDown={(e) => {

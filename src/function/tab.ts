@@ -90,6 +90,9 @@ export const createNewTab = (data: {
     setCurrentTabId(store, newTabId);
     setTabList(store, newTabList);
     effectChangeTabs(controlView, newTabList);
+    setTimeout(() => {
+      controlView.webContents.send('effect-new-tab', true);
+    }, 1000);
   });
 
   bodyView.webContents.on('did-navigate', () => {
