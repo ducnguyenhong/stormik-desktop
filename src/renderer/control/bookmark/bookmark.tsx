@@ -26,9 +26,9 @@ const Bookmark: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex items-center gap-2 h-full px-2.5 pb-[2px]">
+    <div className="flex items-center gap-1 h-full px-2.5 pb-[2px]">
       {bookmarkList.map((item) => {
-        const { title, url, id } = item;
+        const { title, url, id, isDefault } = item;
         return (
           <div
             key={id}
@@ -39,7 +39,7 @@ const Bookmark: React.FC = () => {
             <div className="w-[28px] h-[28px] flex justify-center items-center">
               <img src={`https://www.google.com/s2/favicons?domain=${url}&sz=128`} className="w-4 h-4" />
             </div>
-            <p className="text-[12px]">{compactTitle(title)}</p>
+            {!isDefault && <p className="text-[12px]">{compactTitle(title)}</p>}
 
             <div
               className="absolute hidden opacity-0 -top-1 -right-1 w-[15px] h-[15px] rounded-full items-center justify-center duration-200 hover:bg-red-200 group-hover:opacity-100 group-hover:visible group-hover:flex"

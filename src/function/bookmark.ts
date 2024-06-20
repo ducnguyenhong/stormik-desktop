@@ -6,22 +6,38 @@ export const DEFAULT_BOOKMARK_LIST = [
   {
     id: 'youtube',
     title: 'Youtube',
-    url: 'https://youtube.com'
+    url: 'https://youtube.com',
+    isDefault: true
   },
   {
     id: 'facebook',
     title: 'Facebook',
-    url: 'https://facebook.com'
+    url: 'https://facebook.com',
+    isDefault: true
+  },
+  {
+    id: 'instagram',
+    title: 'Instagram',
+    url: 'https://instagram.com',
+    isDefault: true
   },
   {
     id: 'gmail',
     title: 'Gmail',
-    url: 'https://mail.google.com'
+    url: 'https://mail.google.com',
+    isDefault: true
   },
   {
     id: 'google-drive',
     title: 'Google Drive',
-    url: 'https://drive.google.com'
+    url: 'https://drive.google.com',
+    isDefault: true
+  },
+  {
+    id: 'tiktok',
+    title: 'Tiktok',
+    url: 'https://tiktok.com',
+    isDefault: true
   }
 ];
 

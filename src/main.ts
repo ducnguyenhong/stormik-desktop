@@ -40,7 +40,7 @@ if (require('electron-squirrel-startup')) {
 const createWindow = (): void => {
   let tabsContentView: TabContentView[] = [];
 
-  // setBookmarkList(store, []);
+  setBookmarkList(store, []);
 
   setTabList(store, []);
 
