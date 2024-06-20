@@ -1,6 +1,6 @@
 import { memo, useEffect, useRef, useState } from 'react';
 import { Tab } from '../../../types/tab.type';
-import { HOME_DOMAIN } from '../../../utils/const';
+import { HOME_DOMAIN_INCOGNITO, HOME_DOMAIN_NORMAL } from '../../../utils/const';
 import BookmarkButton from './components/bookmark-button';
 import ProtectButton from './components/protect-button';
 
@@ -31,7 +31,7 @@ const InputURL: React.FC = () => {
         ref={inputRef}
         className="bg-[#f7f7f8] border-[#e6e6e6] pb-[2px] text-[#595959] text-[14px] flex-1 border rounded-full h-full px-[31px] focus:border focus:bg-white focus:outline-[#38a643]"
         type="text"
-        value={url === HOME_DOMAIN ? '' : url}
+        value={url === HOME_DOMAIN_NORMAL || url === HOME_DOMAIN_INCOGNITO ? '' : url}
         onFocus={() => inputRef.current?.select()}
         placeholder="Tìm kiếm hoặc nhập một URL"
         onChange={(e) => setUrl(e.target.value)}

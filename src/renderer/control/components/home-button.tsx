@@ -1,9 +1,9 @@
 import { memo } from 'react';
-import { HOME_DOMAIN } from '../../../utils/const';
+import { HOME_DOMAIN_NORMAL } from '../../../utils/const';
 
 const HomeButton: React.FC = () => {
   return (
-    <button type="button" className="home-button" onClick={() => window.electronAPI.enterUrl(HOME_DOMAIN)}>
+    <button type="button" className="home-button" onClick={() => window.electronAPI.enterUrl(HOME_DOMAIN_NORMAL)}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

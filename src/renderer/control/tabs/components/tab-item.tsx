@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { memo, useCallback } from 'react';
 import { Tab } from '../../../../types/tab.type';
-import { HOME_DOMAIN } from '../../../../utils/const';
+import { HOME_DOMAIN_NORMAL } from '../../../../utils/const';
 
 interface TabItemProps {
   item: Tab;
@@ -11,7 +11,7 @@ interface TabItemProps {
 const TabItem: React.FC<TabItemProps> = (props) => {
   const { item, tabs } = props;
   const { id, title, url, isActive, isLoading } = item;
-  const favicon = url.startsWith('view-source:') ? HOME_DOMAIN : url;
+  const favicon = url.startsWith('view-source:') ? HOME_DOMAIN_NORMAL : url;
 
   const onClickTab = useCallback(() => {
     console.log('ducnh haha');
