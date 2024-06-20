@@ -4,7 +4,6 @@ import { CONTROL_HEIGHT } from '../main';
 import { Tab, TabContentView } from '../types/tab.type';
 import {
   CURRENT_TAB_ID_STORE_KEY,
-  HOME_DOMAIN,
   SHOW_DEVTOOL_STORE_KEY,
   TABS_LENGTH_STORE_KEY,
   TABS_STORE_KEY
@@ -81,8 +80,8 @@ export const createNewTab = (data: {
       id: newTabId,
       index: tabList.length,
       isActive: true,
-      title: 'Thẻ mới',
-      url: HOME_DOMAIN,
+      title: bodyView.webContents.getTitle(),
+      url: newUrl,
       isLoading: false
     });
 
@@ -142,6 +141,12 @@ export const createNewTab = (data: {
   });
 
   bodyView.webContents.on('did-finish-load', () => {
+    const currentTabLength = getTabsLength(store);
+
+    if (nextTabLength !== currentTabLength) {
+      return;
+    }
+
     const tabList = getTabList(store);
     const newTabList = tabList.map((item) => {
       if (item.isActive) {

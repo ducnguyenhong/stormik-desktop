@@ -1,5 +1,6 @@
-// export const HOME_DOMAIN = 'https://uat.homefood.com.vn/gio-hang';
-export const HOME_DOMAIN = 'https://stormik.org/search';
+export const HOME_DOMAIN =
+  'https://cms-uat.homefood.com.vn/sieu-thi/san-pham/cap-nhat/1d5f4b21-a986-4d8c-969b-a03cee6f9fe1';
+// export const HOME_DOMAIN = 'https://stormik.org/search';
 
 export const MAIN_BG_COLOR = '#e6e6e6';
 

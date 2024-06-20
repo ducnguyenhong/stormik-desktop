@@ -27,8 +27,15 @@
  */
 
 import { createRoot } from 'react-dom/client';
+import { RecoilRoot } from 'recoil';
 import './index.css';
 import Control from './renderer/control';
 
 const root = createRoot(document.getElementById('control'));
-root.render(<Control />);
+root.render(
+  <div>
+    <RecoilRoot>
+      <Control />
+    </RecoilRoot>
+  </div>
+);

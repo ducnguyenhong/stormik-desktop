@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { memo, useCallback } from 'react';
 
 const PrevButton: React.FC = () => {
-  const isActive = false;
+  const isActive = true;
 
   const onPrevPage = useCallback(() => {
     if (!isActive) {

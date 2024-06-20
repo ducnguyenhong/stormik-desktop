@@ -1,7 +1,7 @@
 import { BrowserWindow, Menu, WebContentsView } from 'electron';
 import { TabContentView } from '../types/tab.type';
 import { SHOW_DEVTOOL_STORE_KEY } from '../utils/const';
-import { createNewSourceTab, getCurrentTabId, getTabList } from './tab';
+import { createNewSourceTab, createNewTab, getCurrentTabId, getTabList, getTabsLength } from './tab';
 
 export const showContextMenu = (data: {
   event: Electron.IpcMainEvent;
@@ -11,14 +11,36 @@ export const showContextMenu = (data: {
   store: any;
   preloadUrl: string;
   setTabsContentView: (data: TabContentView[]) => void;
+  targetData: any;
 }) => {
-  const { event, mainWindow, controlView, tabsContentView, store, preloadUrl, setTabsContentView } = data;
+  const { event, mainWindow, controlView, tabsContentView, store, preloadUrl, setTabsContentView, targetData } = data;
+
+  const { targetUrl, clientX, clientY } = targetData || {};
 
   const template: any[] = [
     {
+      label: 'Mở đường liên kết trong tab mới',
+      click: () => {
+        createNewTab({
+          mainWindow,
+          controlView,
+          tabsContentView,
+          setTabsContentView: (tabsContent: TabContentView[]) => setTabsContentView(tabsContent),
+          store,
+          preloadUrl,
+          newUrl: targetUrl,
+          nextTabLength: getTabsLength(store) + 1
+        });
+      },
+      enabled: !!targetUrl
+    },
+    {
       label: 'Quay lại                                      Atl + Mũi tên trái',
-      // click: () => {},
-      enabled: false
+      click: () => {
+        const currentTabId = getCurrentTabId(store);
+        const currentTabView = tabsContentView.find((i) => i.tabId === currentTabId);
+        currentTabView?.view?.webContents?.goBack();
+      }
     },
     {
       label: 'Tiến lên                                     Atl + Mũi tên phải',
@@ -60,7 +82,7 @@ export const showContextMenu = (data: {
         const currentTabId = getCurrentTabId(store);
         const currentTabView = tabsContentView.find((i) => i.tabId === currentTabId);
         store.set(SHOW_DEVTOOL_STORE_KEY, true);
-        currentTabView?.view?.webContents?.openDevTools();
+        currentTabView?.view?.webContents?.inspectElement(clientX, clientY);
       }
     }
   ];

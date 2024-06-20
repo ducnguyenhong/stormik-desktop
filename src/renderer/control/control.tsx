@@ -5,7 +5,7 @@ import TabList from './tabs';
 
 const Control: React.FC = () => {
   return (
-    <div className="w-full h-[115px] border-b border-[#e6e6e6]">
+    <div className="w-full h-[115px] border-b border-[#e6e6e6] overflow-hidden">
       <div className="h-[40px]">
         <TabList />
       </div>
