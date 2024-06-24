@@ -105,7 +105,7 @@ export const createNewTab = (data: {
     const tabList = getTabList(store);
 
     const newTabList = tabList.map((item) => {
-      if (item.isActive) {
+      if (item.id === newTabId) {
         return {
           ...item,
           url: bodyView.webContents.getURL(),
@@ -129,7 +129,7 @@ export const createNewTab = (data: {
     const tabList = getTabList(store);
 
     const newTabList = tabList.map((item) => {
-      if (item.isActive) {
+      if (item.id === newTabId) {
         return {
           ...item,
           url: bodyView.webContents.getURL(),
@@ -152,7 +152,7 @@ export const createNewTab = (data: {
 
     const tabList = getTabList(store);
     const newTabList = tabList.map((item) => {
-      if (item.isActive) {
+      if (item.id === newTabId) {
         return {
           ...item,
           title: bodyView.webContents.getTitle(),

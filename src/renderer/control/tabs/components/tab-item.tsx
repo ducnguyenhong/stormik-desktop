@@ -1,21 +1,22 @@
 import clsx from 'clsx';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { Tab } from '../../../../types/tab.type';
 import { HOME_DOMAIN_NORMAL } from '../../../../utils/const';
+import { tabsAtom } from '../../control.recoil';
 
 interface TabItemProps {
   item: Tab;
-  tabs: Tab[];
 }
 
 const TabItem: React.FC<TabItemProps> = (props) => {
-  const { item, tabs } = props;
+  const tabs = useRecoilValue(tabsAtom);
+  const { item } = props;
   const { id, title, url, isActive, isLoading } = item;
   const favicon = url.startsWith('view-source:') ? HOME_DOMAIN_NORMAL : url;
+  const [isDragDown, setIsDragDown] = useState<boolean>(false);
 
   const onClickTab = useCallback(() => {
-    console.log('ducnh haha');
-
     window.electronAPI.changeTab(id);
   }, [tabs, id]);
 
@@ -26,15 +27,25 @@ const TabItem: React.FC<TabItemProps> = (props) => {
   return (
     <div
       className={clsx(
-        'h-[35px] relative flex items-center px-2 gap-2.5 cursor-default rounded-t-xl w-[230px] justify-between',
+        'h-[35px] relative flex items-center px-2 gap-2.5 cursor-auto rounded-t-xl w-[230px] justify-between',
         {
           'bg-white': isActive
         }
       )}
       key={id}
+      draggable
+      onDrag={(e) => {
+        if (e.clientY > 50 && !isDragDown && tabs.length > 1) {
+          // window.electronAPI.newWindowFromTab(id);
+          setIsDragDown(true);
+        }
+      }}
+      onDragEnd={(e) => {
+        setIsDragDown(false);
+      }}
     >
       <div
-        className={clsx('flex items-center gap-2 flex-1 h-full', {
+        className={clsx('flex items-center gap-2 flex-1 cursor-auto h-full', {
           'overflow-hidden': isActive
         })}
         onClick={() => {

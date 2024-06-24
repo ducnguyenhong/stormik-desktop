@@ -14,9 +14,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
   prevPage: () => ipcRenderer.send('prev-page'),
   nextPage: () => ipcRenderer.send('next-page'),
 
-  changeTab: (id: string) => ipcRenderer.send('change-tab', id),
+  changeTab: (tabId: string) => ipcRenderer.send('change-tab', tabId),
   newTab: () => ipcRenderer.send('new-tab'),
-  closeTab: (id: string) => ipcRenderer.send('close-tab', id),
+  closeTab: (tabId: string) => ipcRenderer.send('close-tab', tabId),
+
+  newWindowFromTab: (tabId: string) => ipcRenderer.send('new-window-from-tab', tabId),
 
   effectTabChange: (callback: (data: Tab[]) => void) =>
     ipcRenderer.on('effect-tab-change', (_event, value) => callback(value)),

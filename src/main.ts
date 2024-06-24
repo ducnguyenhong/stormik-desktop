@@ -30,31 +30,40 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 const store: any = new Store();
 
 export const CONTROL_HEIGHT = 115.5; // px
-// export const CONTROL_HEIGHT = 400; // px
+// export const CONTROL_HEIGHT = 600; // px
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-const createWindow = (): void => {
-  let tabsContentView: TabContentView[] = [];
+let tabsContentView: TabContentView[] = [];
 
-  setBookmarkList(store, []);
+const createWindow = (defaultTabId?: string): void => {
+  console.log('ducnh defaultTabId', defaultTabId);
 
-  setTabList(store, []);
+  const firstTabId = defaultTabId || uuidV4();
 
-  // store.set(INCOGNITO_KEY, false);
+  if (!defaultTabId) {
+    setTabList(store, []);
+  }
 
   const isIncognito = store.get(INCOGNITO_KEY);
 
-  const HOME_DOMAIN = isIncognito ? HOME_DOMAIN_INCOGNITO : HOME_DOMAIN_NORMAL;
+  let HOME_DOMAIN = isIncognito ? HOME_DOMAIN_INCOGNITO : HOME_DOMAIN_NORMAL;
+  if (defaultTabId) {
+    const tabList = getTabList(store);
+    const currentTab = tabList.find((i) => i.id === defaultTabId);
+    if (currentTab) {
+      HOME_DOMAIN = currentTab.url;
+    }
+  }
 
   const mainWindow = new BrowserWindow({
     x: 0,
-    y: 0,
-    height: 1080,
-    width: 1920,
+    y: defaultTabId ? 100 : 0,
+    height: defaultTabId ? 980 : 1080,
+    width: defaultTabId ? 1920 : 1920,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       sandbox: true,
@@ -70,7 +79,9 @@ const createWindow = (): void => {
   });
 
   mainWindow.removeMenu();
-  mainWindow.maximize();
+  if (!defaultTabId) {
+    mainWindow.maximize();
+  }
 
   const controlView = new WebContentsView({
     webPreferences: {
@@ -108,26 +119,25 @@ const createWindow = (): void => {
   });
 
   bodyView.webContents.loadURL(HOME_DOMAIN).then(() => {
-    const newTabId = uuidV4();
     store.set(TABS_STORE_KEY, [
       {
         title: 'Thẻ mới',
         url: HOME_DOMAIN,
-        id: newTabId,
+        id: firstTabId,
         isActive: true
       }
     ]);
-    setCurrentTabId(store, newTabId);
+    setCurrentTabId(store, firstTabId);
     const newTabList = [];
     newTabList.push({
-      id: newTabId,
+      id: firstTabId,
       index: 0,
       isActive: true,
       title: 'Thẻ mới',
       url: HOME_DOMAIN,
       isLoading: false
     });
-    tabsContentView.push({ view: bodyView, tabId: newTabId });
+    tabsContentView.push({ view: bodyView, tabId: firstTabId });
     addTabsLength(store);
     setTabList(store, newTabList);
     effectChangeTabs(controlView, newTabList);
@@ -157,7 +167,7 @@ const createWindow = (): void => {
 
     const oldTabList = getTabList(store);
     const newTabList = oldTabList.map((item) => {
-      if (item.isActive) {
+      if (item.id === firstTabId) {
         return {
           ...item,
           url,
@@ -181,7 +191,7 @@ const createWindow = (): void => {
 
     const oldTabList = getTabList(store);
     const newTabList = oldTabList.map((item) => {
-      if (item.isActive) {
+      if (item.id === firstTabId) {
         return {
           ...item,
           url,
@@ -197,7 +207,7 @@ const createWindow = (): void => {
   bodyView.webContents.on('did-finish-load', () => {
     const oldTabList = getTabList(store);
     const newTabList = oldTabList.map((item) => {
-      if (item.isActive) {
+      if (item.id === firstTabId) {
         return {
           ...item,
           title: bodyView.webContents.getTitle(),
@@ -226,7 +236,7 @@ const createWindow = (): void => {
     return { action: 'deny' };
   });
 
-  ipcMain.on('url-enter', (e, url) => {
+  ipcMain.on('url-enter', (_event, url) => {
     const currentTabId = getCurrentTabId(store);
     const tabList = getTabList(store);
     const currentTabView = tabsContentView.find((i) => i.tabId === currentTabId);
@@ -238,7 +248,7 @@ const createWindow = (): void => {
     effectChangeTabs(controlView, newTabList);
   });
 
-  ipcMain.on('load-bookmark-url', (e, url) => {
+  ipcMain.on('load-bookmark-url', (_event, url) => {
     const currentTabId = getCurrentTabId(store);
     const tabList = getTabList(store);
     const currentTabView = tabsContentView.find((i) => i.tabId === currentTabId);
@@ -272,7 +282,7 @@ const createWindow = (): void => {
     }
   });
 
-  ipcMain.on('remove-bookmark', (e, id: string) => {
+  ipcMain.on('remove-bookmark', (_event, id: string) => {
     const bookmarkList = getBookmarkList(store);
     const newBookmarkList = bookmarkList.filter((i) => i.id !== id);
     setBookmarkList(store, newBookmarkList);
@@ -300,7 +310,13 @@ const createWindow = (): void => {
     });
   });
 
-  ipcMain.on('change-tab', (e, tabId: string) => {
+  ipcMain.on('new-window-from-tab', (_event, tabId: string) => {
+    if (!defaultTabId) {
+      createWindow(tabId);
+    }
+  });
+
+  ipcMain.on('change-tab', (_event, tabId: string) => {
     const tabList = getTabList(store);
 
     for (let i = 0; i < tabsContentView.length; i++) {
@@ -317,7 +333,7 @@ const createWindow = (): void => {
     effectChangeTabs(controlView, newTabList);
   });
 
-  ipcMain.on('close-tab', (e, tabId: string) => {
+  ipcMain.on('close-tab', (_event, tabId: string) => {
     const currentTabId = getCurrentTabId(store);
     const isCurrentTab = tabId === currentTabId;
     const tabList = getTabList(store);
@@ -388,6 +404,8 @@ const createWindow = (): void => {
     }
   });
 
+  // controlView.webContents.openDevTools();
+
   // Open the DevTools.
   bodyView.webContents.on('before-input-event', (event, input) => {
     if (input.key === 'F12') {
@@ -437,7 +455,7 @@ const createWindow = (): void => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => createWindow());
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
