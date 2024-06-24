@@ -99,7 +99,7 @@ const createWindow = (defaultTabId?: string): void => {
       sandbox: true
     }
   });
-  mainWindow.contentView.addChildView(controlView);
+  mainWindow.contentView.addChildView(controlView, 1000000000);
   mainWindow.contentView.addChildView(bodyView, 0);
 
   controlView.setBounds({
