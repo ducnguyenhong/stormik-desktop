@@ -40,8 +40,7 @@ if (require('electron-squirrel-startup')) {
 let tabsContentView: TabContentView[] = [];
 
 const createWindow = (defaultTabId?: string): void => {
-  console.log('ducnh defaultTabId', defaultTabId);
-
+  const windowId = uuidV4();
   const firstTabId = defaultTabId || uuidV4();
 
   if (!defaultTabId) {
@@ -121,7 +120,7 @@ const createWindow = (defaultTabId?: string): void => {
   bodyView.webContents.loadURL(HOME_DOMAIN).then(() => {
     store.set(TABS_STORE_KEY, [
       {
-        title: 'Thẻ mới',
+        title: defaultTabId ? bodyView.webContents.getTitle() : 'Thẻ mới',
         url: HOME_DOMAIN,
         id: firstTabId,
         isActive: true
@@ -133,11 +132,12 @@ const createWindow = (defaultTabId?: string): void => {
       id: firstTabId,
       index: 0,
       isActive: true,
-      title: 'Thẻ mới',
+      title: defaultTabId ? bodyView.webContents.getTitle() : 'Thẻ mới',
       url: HOME_DOMAIN,
-      isLoading: false
+      isLoading: false,
+      windowId
     });
-    tabsContentView.push({ view: bodyView, tabId: firstTabId });
+    tabsContentView.push({ view: bodyView, tabId: firstTabId, windowId });
     addTabsLength(store);
     setTabList(store, newTabList);
     effectChangeTabs(controlView, newTabList);
@@ -313,6 +313,35 @@ const createWindow = (defaultTabId?: string): void => {
   ipcMain.on('new-window-from-tab', (_event, tabId: string) => {
     if (!defaultTabId) {
       createWindow(tabId);
+
+      const currentTabId = getCurrentTabId(store);
+      const isCurrentTab = tabId === currentTabId;
+      const tabList = getTabList(store);
+      const closeTabIndex = tabList.findIndex((i) => i.id === tabId);
+
+      if (closeTabIndex) {
+        tabsContentView?.[closeTabIndex]?.view?.webContents?.close();
+        tabsContentView?.[closeTabIndex]?.view?.setVisible(false);
+      }
+
+      const newTabList = tabList
+        .filter((i) => i.id !== tabId)
+        .map((i, idx) => ({ ...i, isActive: isCurrentTab ? idx === 0 : i.isActive }));
+
+      tabsContentView = tabsContentView.filter((i) => i.tabId !== tabId);
+
+      if (isCurrentTab) {
+        for (let i = 0; i < tabsContentView.length; i++) {
+          if (i === 0) {
+            tabsContentView?.[i]?.view?.setVisible(true);
+          } else {
+            tabsContentView?.[i]?.view?.setVisible(false);
+          }
+        }
+      }
+      setCurrentTabId(store, newTabList[0].id);
+      setTabList(store, newTabList);
+      effectChangeTabs(controlView, newTabList);
     }
   });
 

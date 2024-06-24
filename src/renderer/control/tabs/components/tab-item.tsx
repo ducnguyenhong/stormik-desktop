@@ -36,7 +36,7 @@ const TabItem: React.FC<TabItemProps> = (props) => {
       draggable
       onDrag={(e) => {
         if (e.clientY > 50 && !isDragDown && tabs.length > 1) {
-          // window.electronAPI.newWindowFromTab(id);
+          window.electronAPI.newWindowFromTab(id);
           setIsDragDown(true);
         }
       }}

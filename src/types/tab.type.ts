@@ -6,6 +6,7 @@ export interface Tab {
   id: string;
   isActive: boolean;
   index: number;
+  windowId?: string;
   view?: WebContentsView;
   isLoading?: boolean;
 }
@@ -13,4 +14,5 @@ export interface Tab {
 export interface TabContentView {
   view: WebContentsView;
   tabId: string;
+  windowId?: string;
 }

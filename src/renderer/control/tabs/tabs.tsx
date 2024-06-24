@@ -8,6 +8,7 @@ import TabItem from './components/tab-item';
 const Tabs: React.FC = () => {
   const tabs = useRecoilValue(tabsAtom);
   const setIsNewTab = useSetRecoilState(isNewTabAtom);
+  // const [isDropping, setIsDropping] = useState<boolean>(false);
 
   useEffect(() => {
     window.electronAPI.effectNewTab((newTab: boolean) => {
@@ -16,7 +17,16 @@ const Tabs: React.FC = () => {
   }, [setIsNewTab]);
 
   return (
-    <div id="draggable-window" className="flex items-center justify-between h-full bg-[#e6e6e6] pl-2 pr-[140px]">
+    <div
+      id="draggable-window"
+      className="flex items-center justify-between h-full bg-[#e6e6e6] pl-2 pr-[140px]"
+      onDragLeaveCapture={(e) => {
+        console.log('ducnh 5555', e);
+      }}
+      onDragLeave={(e) => {
+        console.log('ducnh 6666', e);
+      }}
+    >
       <div className="flex items-center h-full gap-1 py-1">
         <ManageTab />
 
