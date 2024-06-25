@@ -250,3 +250,31 @@ export const createNewSourceTab = (data: {
     return { action: 'deny' };
   });
 };
+
+export const createNewSystemTab = (data: {
+  controlView: WebContentsView;
+  store: any;
+  newUrl: string;
+  newTitle: string;
+}) => {
+  const { controlView, store, newUrl, newTitle } = data;
+  const newTabId = uuidV4();
+
+  const tabList = getTabList(store);
+  const newTabList = tabList.map((item) => ({ ...item, isActive: false }));
+
+  newTabList.push({
+    id: newTabId,
+    index: tabList.length,
+    isActive: true,
+    title: newTitle,
+    url: newUrl,
+    isLoading: false
+  });
+
+  // controlView.webContents.send('effect-system-url', 'stormik://history');
+  addTabsLength(store);
+  setCurrentTabId(store, newTabId);
+  setTabList(store, newTabList);
+  effectChangeTabs(controlView, newTabList);
+};

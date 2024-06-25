@@ -29,7 +29,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.on('effect-new-tab', (_event, value) => callback(value)),
 
   effectChangeBookmarks: (callback: (data: Bookmark[]) => void) =>
-    ipcRenderer.on('effect-bookmark-change', (_event, value) => callback(value))
+    ipcRenderer.on('effect-bookmark-change', (_event, value) => callback(value)),
+
+  effectSystemUrl: (callback: (data: string) => void) =>
+    ipcRenderer.on('effect-system-url', (_event, value) => callback(value))
 });
 
 window.addEventListener('contextmenu', (e: any) => {

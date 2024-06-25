@@ -27,15 +27,28 @@
  */
 
 import { createRoot } from 'react-dom/client';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import './index.css';
 import Control from './renderer/control';
+import History from './renderer/history';
+
+const router = createHashRouter([
+  {
+    path: '/',
+    element: <Control />
+  },
+  {
+    path: 'history',
+    element: <History />
+  }
+]);
 
 const root = createRoot(document.getElementById('control'));
 root.render(
   <div>
     <RecoilRoot>
-      <Control />
+      <RouterProvider router={router} />
     </RecoilRoot>
   </div>
 );

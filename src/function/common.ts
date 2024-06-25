@@ -7,7 +7,14 @@ import PasswordIcon from '../assets/password.png';
 import SettingIcon from '../assets/setting.png';
 import { TabContentView } from '../types/tab.type';
 import { HOME_DOMAIN_NORMAL, SHOW_DEVTOOL_STORE_KEY } from '../utils/const';
-import { createNewSourceTab, createNewTab, getCurrentTabId, getTabList, getTabsLength } from './tab';
+import {
+  createNewSourceTab,
+  createNewSystemTab,
+  createNewTab,
+  getCurrentTabId,
+  getTabList,
+  getTabsLength
+} from './tab';
 
 export const showContextMenu = (data: {
   event: Electron.IpcMainEvent;
@@ -169,7 +176,13 @@ export const showCustomizeMenu = (data: {
     {
       label: 'Lịch sử',
       click: () => {
-        console.log('haha');
+        // controlView.webContents.send('effect-system-url', 'stormik://history');
+        createNewSystemTab({
+          controlView,
+          store,
+          newUrl: `stormik://history`,
+          newTitle: 'Lịch sử'
+        });
       },
       accelerator: 'Ctrl + H'
     },

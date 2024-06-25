@@ -1,4 +1,5 @@
 import { memo, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { Tab } from '../../../types/tab.type';
 import { HOME_DOMAIN_INCOGNITO, HOME_DOMAIN_NORMAL } from '../../../utils/const';
@@ -10,6 +11,7 @@ const InputURL: React.FC = () => {
   const [url, setUrl] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
   const [isNewTab, setIsNewTab] = useRecoilState(isNewTabAtom);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isNewTab) {
@@ -21,11 +23,15 @@ const InputURL: React.FC = () => {
   useEffect(() => {
     window.electronAPI.effectTabChange((tabsData: Tab[]) => {
       const currentTab = tabsData.find((i) => i.isActive);
-      if (currentTab?.url) {
-        setUrl(currentTab?.url);
+      const url = currentTab?.url;
+      if (url) {
+        setUrl(url);
+      }
+      if (url === 'stormik://history') {
+        navigate('/history');
       }
     });
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="flex relative flex-1 h-full">

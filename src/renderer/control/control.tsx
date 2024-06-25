@@ -10,12 +10,21 @@ import TabList from './tabs';
 
 const Control: React.FC = () => {
   const [tabs, setTabs] = useRecoilState(tabsAtom);
+  // const navigate = useNavigate();
 
   useEffect(() => {
     window.electronAPI.effectTabChange((tabsData: Tab[]) => {
       setTabs(tabsData);
     });
   }, [tabs]);
+
+  // useEffect(() => {
+  //   window.electronAPI.effectSystemUrl((url: string) => {
+  //     if (url === 'stormik://history') {
+  //       navigate('/history');
+  //     }
+  //   });
+  // }, [navigate]);
 
   return (
     <div className="w-full h-[115px] border-b border-[#e6e6e6] overflow-hidden">
