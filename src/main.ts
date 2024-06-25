@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, WebContentsView } from 'electron';
 import Store from 'electron-store';
 import { v4 as uuidV4 } from 'uuid';
 import { DEFAULT_BOOKMARK_LIST, effectChangeBookmarks, getBookmarkList, setBookmarkList } from './function/bookmark';
-import { showContextMenu } from './function/common';
+import { showContextMenu, showCustomizeMenu } from './function/common';
 import {
   addTabsLength,
   createNewTab,
@@ -423,6 +423,20 @@ const createWindow = (defaultTabId?: string): void => {
       store,
       preloadUrl: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       targetData
+    });
+  });
+
+  ipcMain.on('open-customize', (event) => {
+    showCustomizeMenu({
+      event,
+      mainWindow,
+      controlView,
+      tabsContentView,
+      setTabsContentView: (tabsContent: TabContentView[]) => {
+        tabsContentView = tabsContent;
+      },
+      store,
+      preloadUrl: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY
     });
   });
 

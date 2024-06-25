@@ -28,7 +28,7 @@ const InputURL: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex relative flex-1 h-full mr-10">
+    <div className="flex relative flex-1 h-full">
       <input
         ref={inputRef}
         className="bg-[#f7f7f8] border-[#e6e6e6] pb-[2px] text-[#595959] text-[14px] flex-1 border rounded-full h-full px-[31px] focus:border focus:bg-white focus:outline-[#38a643]"

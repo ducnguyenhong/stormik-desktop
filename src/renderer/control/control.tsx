@@ -5,6 +5,7 @@ import Bookmark from './bookmark';
 import ButtonControl from './button-control';
 import { tabsAtom } from './control.recoil';
 import InputURL from './input-url';
+import MoreAction from './more-action';
 import TabList from './tabs';
 
 const Control: React.FC = () => {
@@ -25,6 +26,8 @@ const Control: React.FC = () => {
         <ButtonControl />
 
         <InputURL />
+
+        <MoreAction />
       </div>
 
       <div className="h-[34px]">

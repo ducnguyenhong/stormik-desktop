@@ -28,5 +28,12 @@ export const rules: Required<ModuleOptions>['rules'] = [
         transpileOnly: true
       }
     }
+  },
+  {
+    test: /\.(bin|raw|png|ico|svg|jpg|jpeg|gif)$/,
+    type: 'asset/inline',
+    generator: {
+      dataUrl: (content: any) => content
+    }
   }
 ];

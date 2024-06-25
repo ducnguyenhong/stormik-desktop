@@ -20,6 +20,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   newWindowFromTab: (tabId: string) => ipcRenderer.send('new-window-from-tab', tabId),
 
+  openCustomize: () => ipcRenderer.send('open-customize'),
+
   effectTabChange: (callback: (data: Tab[]) => void) =>
     ipcRenderer.on('effect-tab-change', (_event, value) => callback(value)),
 
