@@ -3,7 +3,7 @@ import { memo, useCallback, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { Tab } from '../../../../types/tab.type';
 import { HOME_DOMAIN_NORMAL } from '../../../../utils/const';
-import { tabsAtom } from '../../control.recoil';
+import { isIncognitoAtom, tabsAtom } from '../../control.recoil';
 
 interface TabItemProps {
   item: Tab;
@@ -15,6 +15,7 @@ const TabItem: React.FC<TabItemProps> = (props) => {
   const { id, title, url, isActive, isLoading } = item;
   const favicon = url.startsWith('view-source:') ? HOME_DOMAIN_NORMAL : url;
   const [isDragDown, setIsDragDown] = useState<boolean>(false);
+  const isIncognito = useRecoilValue(isIncognitoAtom);
 
   const onClickTab = useCallback(() => {
     window.electronAPI.changeTab(id);
@@ -29,7 +30,8 @@ const TabItem: React.FC<TabItemProps> = (props) => {
       className={clsx(
         'h-[35px] relative flex items-center px-2 gap-2.5 cursor-auto rounded-t-xl w-[230px] justify-between',
         {
-          'bg-white': isActive
+          'bg-white': isActive && !isIncognito,
+          'bg-[#595959]': isActive && isIncognito
         }
       )}
       key={id}
@@ -105,7 +107,13 @@ const TabItem: React.FC<TabItemProps> = (props) => {
           <img src={`https://www.google.com/s2/favicons?domain=${favicon}&sz=128`} className="w-4 h-4" />
         )}
 
-        <p className="font-medium text-[12px] line-clamp-1">{title}</p>
+        <p
+          className={clsx('font-medium text-[12px] line-clamp-1', {
+            'text-white': isIncognito
+          })}
+        >
+          {title}
+        </p>
       </div>
 
       {tabs.length > 1 && (
@@ -125,23 +133,37 @@ const TabItem: React.FC<TabItemProps> = (props) => {
 
       <div
         className={clsx('absolute bottom-0 left-[-8px] w-[8px] h-[8px]', {
-          'bg-white': isActive,
-          'bg-[#e6e6e6]': !isActive
+          'bg-white': isActive && !isIncognito,
+          'bg-[#595959]': !isActive || (isActive && isIncognito),
+          'bg-[#e6e6e6]': !isActive && !isIncognito,
+          'bg-[#4f4f4f]': !isActive && isIncognito
         })}
       >
         <div className="relative w-full h-full">
-          <div className="bg-[#e6e6e6] w-full h-full rounded-br-full" />
+          <div
+            className={clsx('w-full h-full rounded-br-full', {
+              'bg-[#e6e6e6]': !isIncognito,
+              'bg-[#4f4f4f]': isIncognito
+            })}
+          />
         </div>
       </div>
 
       <div
         className={clsx('absolute bottom-0 right-[-8px] w-[8px] h-[8px]', {
-          'bg-white': isActive,
-          'bg-[#e6e6e6]': !isActive
+          'bg-white': isActive && !isIncognito,
+          'bg-[#595959]': !isActive || (isActive && isIncognito),
+          'bg-[#e6e6e6]': !isActive && !isIncognito,
+          'bg-[#4f4f4f]': !isActive && isIncognito
         })}
       >
         <div className="relative w-full h-full">
-          <div className="bg-[#e6e6e6] w-full h-full rounded-bl-full" />
+          <div
+            className={clsx('w-full h-full rounded-bl-full', {
+              'bg-[#e6e6e6]': !isIncognito,
+              'bg-[#4f4f4f]': isIncognito
+            })}
+          />
         </div>
       </div>
     </div>

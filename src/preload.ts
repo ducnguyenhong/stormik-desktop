@@ -22,6 +22,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   openCustomize: () => ipcRenderer.send('open-customize'),
 
+  effectIncognito: (callback: (data: boolean) => void) =>
+    ipcRenderer.on('effect-incognito', (_event, value) => callback(value)),
+
   effectTabChange: (callback: (data: Tab[]) => void) =>
     ipcRenderer.on('effect-tab-change', (_event, value) => callback(value)),
 

@@ -72,27 +72,46 @@ export const createNewTab = (data: {
     height: mainWindow.getContentBounds().height - CONTROL_HEIGHT
   });
 
+  const tabList = getTabList(store);
+  const newTabList = tabList.map((item) => ({ ...item, isActive: false }));
+
+  newTabList.push({
+    id: newTabId,
+    index: tabList.length,
+    isActive: true,
+    title: bodyView.webContents.getTitle(),
+    url: newUrl,
+    isLoading: false
+  });
+
+  addTabsLength(store);
+  setTabsContentView([...tabsContentView, { view: bodyView, tabId: newTabId }]);
+  setCurrentTabId(store, newTabId);
+  setTabList(store, newTabList);
+  effectChangeTabs(controlView, newTabList);
+  setTimeout(() => {
+    controlView.webContents.send('effect-new-tab', true);
+  }, 1000);
+
   bodyView.webContents.loadURL(newUrl).then(() => {
-    const tabList = getTabList(store);
-    const newTabList = tabList.map((item) => ({ ...item, isActive: false }));
-
-    newTabList.push({
-      id: newTabId,
-      index: tabList.length,
-      isActive: true,
-      title: bodyView.webContents.getTitle(),
-      url: newUrl,
-      isLoading: false
-    });
-
-    addTabsLength(store);
-    setTabsContentView([...tabsContentView, { view: bodyView, tabId: newTabId }]);
-    setCurrentTabId(store, newTabId);
-    setTabList(store, newTabList);
-    effectChangeTabs(controlView, newTabList);
-    setTimeout(() => {
-      controlView.webContents.send('effect-new-tab', true);
-    }, 1000);
+    // const tabList = getTabList(store);
+    // const newTabList = tabList.map((item) => ({ ...item, isActive: false }));
+    // newTabList.push({
+    //   id: newTabId,
+    //   index: tabList.length,
+    //   isActive: true,
+    //   title: bodyView.webContents.getTitle(),
+    //   url: newUrl,
+    //   isLoading: false
+    // });
+    // addTabsLength(store);
+    // setTabsContentView([...tabsContentView, { view: bodyView, tabId: newTabId }]);
+    // setCurrentTabId(store, newTabId);
+    // setTabList(store, newTabList);
+    // effectChangeTabs(controlView, newTabList);
+    // setTimeout(() => {
+    //   controlView.webContents.send('effect-new-tab', true);
+    // }, 1000);
   });
 
   bodyView.webContents.on('did-navigate', () => {

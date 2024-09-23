@@ -71,7 +71,7 @@ const createWindow = (defaultTabId?: string): void => {
     },
     titleBarStyle: 'hidden',
     titleBarOverlay: {
-      color: '#e6e6e6',
+      color: isIncognito ? '#4f4f4f' : '#e6e6e6',
       symbolColor: '#262626',
       height: 40
     }
@@ -118,6 +118,7 @@ const createWindow = (defaultTabId?: string): void => {
   });
 
   bodyView.webContents.loadURL(HOME_DOMAIN).then(() => {
+    const isIncognito = store.get(INCOGNITO_KEY);
     store.set(TABS_STORE_KEY, [
       {
         title: defaultTabId ? bodyView.webContents.getTitle() : 'Thẻ mới',
@@ -141,6 +142,7 @@ const createWindow = (defaultTabId?: string): void => {
     addTabsLength(store);
     setTabList(store, newTabList);
     effectChangeTabs(controlView, newTabList);
+    controlView.webContents.send('effect-incognito', isIncognito);
     setTimeout(() => {
       controlView.webContents.send('effect-new-tab', true);
     }, 1000);
@@ -149,8 +151,6 @@ const createWindow = (defaultTabId?: string): void => {
     const defaultBookmarkList = bookmarkList.length ? bookmarkList : DEFAULT_BOOKMARK_LIST;
     setBookmarkList(store, defaultBookmarkList);
     effectChangeBookmarks(controlView, defaultBookmarkList);
-
-    const isIncognito = store.get(INCOGNITO_KEY);
     if (isIncognito) {
       mainWindow.webContents.session.clearCache();
       mainWindow.webContents.session.clearStorageData();
@@ -436,7 +436,8 @@ const createWindow = (defaultTabId?: string): void => {
         tabsContentView = tabsContent;
       },
       store,
-      preloadUrl: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY
+      preloadUrl: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+      app
     });
   });
 

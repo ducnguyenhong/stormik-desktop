@@ -1,15 +1,17 @@
+import clsx from 'clsx';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { Tab } from '../../types/tab.type';
 import Bookmark from './bookmark';
 import ButtonControl from './button-control';
-import { tabsAtom } from './control.recoil';
+import { isIncognitoAtom, tabsAtom } from './control.recoil';
 import InputURL from './input-url';
 import MoreAction from './more-action';
 import TabList from './tabs';
 
 const Control: React.FC = () => {
   const [tabs, setTabs] = useRecoilState(tabsAtom);
+  const [isIncognito, setIsIncognito] = useRecoilState(isIncognitoAtom);
   // const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,6 +19,12 @@ const Control: React.FC = () => {
       setTabs(tabsData);
     });
   }, [tabs]);
+
+  useEffect(() => {
+    window.electronAPI.effectIncognito((data: boolean) => {
+      setIsIncognito(data);
+    });
+  }, []);
 
   // useEffect(() => {
   //   window.electronAPI.effectSystemUrl((url: string) => {
@@ -27,7 +35,12 @@ const Control: React.FC = () => {
   // }, [navigate]);
 
   return (
-    <div className="w-full h-[115px] border-b border-[#e6e6e6] overflow-hidden">
+    <div
+      className={clsx('w-full h-[115px] border-b overflow-hidden', {
+        'bg-[#595959] border-[#595959]': isIncognito,
+        'border-[#e6e6e6]': !isIncognito
+      })}
+    >
       <div className="h-[40px]">
         <TabList />
       </div>

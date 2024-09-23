@@ -1,8 +1,12 @@
+import clsx from 'clsx';
 import { memo, useCallback, useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { Bookmark } from '../../../types/bookmark.type';
+import { isIncognitoAtom } from '../control.recoil';
 
 const Bookmark: React.FC = () => {
   const [bookmarkList, setBookmarkList] = useState<Bookmark[]>([]);
+  const isIncognito = useRecoilValue(isIncognitoAtom);
 
   useEffect(() => {
     window.electronAPI.effectChangeBookmarks((data: Bookmark[]) => {
@@ -30,16 +34,31 @@ const Bookmark: React.FC = () => {
       {bookmarkList.map((item) => {
         const { title, url, id, isDefault } = item;
         return (
-          <div
-            key={id}
-            title={title}
-            onClick={() => onLoadBookmark(url)}
-            className="group flex relative px-1 cursor-default items-center gap-0.5 duration-300 rounded-full hover:bg-[#f2f2f2]"
-          >
-            <div className="w-[28px] h-[28px] flex justify-center items-center">
-              <img src={`https://www.google.com/s2/favicons?domain=${url}&sz=128`} className="w-4 h-4" />
+          <div key={id} className="relative group">
+            <div
+              title={title}
+              onClick={() => onLoadBookmark(url)}
+              className={clsx(
+                'flex relative pl-1 pr-1.5 cursor-default items-center gap-0.5 duration-300 rounded-full',
+                {
+                  'hover:bg-[#f2f2f2]': !isIncognito,
+                  'hover:bg-[#808080]': isIncognito
+                }
+              )}
+            >
+              <div className="w-[28px] h-[28px] flex justify-center items-center">
+                <img src={`https://www.google.com/s2/favicons?domain=${url}&sz=128`} className="w-4 h-4" />
+              </div>
+              {!isDefault && (
+                <p
+                  className={clsx('text-[12px]', {
+                    'text-[#e6e6e6]': isIncognito
+                  })}
+                >
+                  {compactTitle(title)}
+                </p>
+              )}
             </div>
-            {!isDefault && <p className="text-[12px]">{compactTitle(title)}</p>}
 
             <div
               className="absolute hidden opacity-0 -top-1 -right-1 w-[15px] h-[15px] rounded-full items-center justify-center duration-200 hover:bg-red-200 group-hover:opacity-100 group-hover:visible group-hover:flex"

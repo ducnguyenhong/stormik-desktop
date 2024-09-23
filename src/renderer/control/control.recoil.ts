@@ -10,3 +10,8 @@ export const tabsAtom = atom<Tab[]>({
   default: [],
   key: 'TABS_ATOM'
 });
+
+export const isIncognitoAtom = atom<boolean>({
+  default: false,
+  key: 'IS_INCOGNITO_ATOM'
+});

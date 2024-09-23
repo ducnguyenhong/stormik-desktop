@@ -1,9 +1,10 @@
+import clsx from 'clsx';
 import { memo, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { Tab } from '../../../types/tab.type';
 import { HOME_DOMAIN_INCOGNITO, HOME_DOMAIN_NORMAL } from '../../../utils/const';
-import { isNewTabAtom } from '../control.recoil';
+import { isIncognitoAtom, isNewTabAtom } from '../control.recoil';
 import BookmarkButton from './components/bookmark-button';
 import ProtectButton from './components/protect-button';
 
@@ -12,6 +13,7 @@ const InputURL: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isNewTab, setIsNewTab] = useRecoilState(isNewTabAtom);
   const navigate = useNavigate();
+  const isIncognito = useRecoilValue(isIncognitoAtom);
 
   useEffect(() => {
     if (isNewTab) {
@@ -34,10 +36,20 @@ const InputURL: React.FC = () => {
   }, [navigate]);
 
   return (
-    <div className="flex relative flex-1 h-full">
+    <div
+      className={clsx('flex relative flex-1 h-full', {
+        'bg-[#595959]': isIncognito
+      })}
+    >
       <input
         ref={inputRef}
-        className="bg-[#f7f7f8] border-[#e6e6e6] pb-[2px] text-[#595959] text-[14px] flex-1 border rounded-full h-full px-[31px] focus:border focus:bg-white focus:outline-[#38a643]"
+        className={clsx(
+          'pb-[2px] text-[#595959] text-[14px] flex-1 border rounded-full h-full px-[31px] focus:border focus:bg-white focus:outline-[#38a643]',
+          {
+            'bg-[#f7f7f8] border-[#e6e6e6]': !isIncognito,
+            'bg-[#595959] border-[#808080]': isIncognito
+          }
+        )}
         type="text"
         value={url === HOME_DOMAIN_NORMAL || url === HOME_DOMAIN_INCOGNITO ? '' : url}
         onFocus={() => inputRef.current?.select()}

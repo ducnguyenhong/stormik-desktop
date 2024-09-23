@@ -1,20 +1,13 @@
 import { BrowserWindow, Menu, nativeImage, WebContentsView } from 'electron';
-import DownloadIcon from '../assets/download.png';
+import HistoryIcon from '../assets/delete-history.png';
 import IncognitoIcon from '../assets/incognito.png';
 import NewTabIcon from '../assets/new-tab.png';
-import NewWindowIcon from '../assets/new-window.png';
-import PasswordIcon from '../assets/password.png';
-import SettingIcon from '../assets/setting.png';
+import PrintIcon from '../assets/print.png';
+import QuitIcon from '../assets/quit.png';
+import SupportIcon from '../assets/support.png';
 import { TabContentView } from '../types/tab.type';
-import { HOME_DOMAIN_NORMAL, SHOW_DEVTOOL_STORE_KEY } from '../utils/const';
-import {
-  createNewSourceTab,
-  createNewSystemTab,
-  createNewTab,
-  getCurrentTabId,
-  getTabList,
-  getTabsLength
-} from './tab';
+import { HOME_DOMAIN_NORMAL, INCOGNITO_KEY, SHOW_DEVTOOL_STORE_KEY } from '../utils/const';
+import { createNewSourceTab, createNewTab, getCurrentTabId, getTabList, getTabsLength } from './tab';
 
 export const showContextMenu = (data: {
   event: Electron.IpcMainEvent;
@@ -116,8 +109,9 @@ export const showCustomizeMenu = (data: {
   store: any;
   preloadUrl: string;
   setTabsContentView: (data: TabContentView[]) => void;
+  app: any;
 }) => {
-  const { event, mainWindow, controlView, tabsContentView, store, preloadUrl, setTabsContentView } = data;
+  const { event, mainWindow, controlView, tabsContentView, store, preloadUrl, setTabsContentView, app } = data;
 
   const template: any[] = [
     {
@@ -137,19 +131,22 @@ export const showCustomizeMenu = (data: {
       icon: nativeImage.createFromBuffer(Buffer.from(NewTabIcon)).resize({ width: 15, height: 15 }),
       accelerator: 'Ctrl + T'
     },
-    {
-      label: 'Cửa sổ mới',
-      click: () => {
-        console.log('haha');
-      },
-      enabled: false,
-      icon: nativeImage.createFromBuffer(Buffer.from(NewWindowIcon)).resize({ width: 15, height: 15 }),
-      accelerator: 'Ctrl + N'
-    },
+    // {
+    //   label: 'Cửa sổ mới',
+    //   click: () => {
+    //     console.log('haha');
+    //   },
+    //   enabled: false,
+    //   icon: nativeImage.createFromBuffer(Buffer.from(NewWindowIcon)).resize({ width: 15, height: 15 }),
+    //   accelerator: 'Ctrl + N'
+    // },
     {
       label: 'Ẩn danh',
       click: () => {
-        console.log('haha');
+        const isIncognito = store.get(INCOGNITO_KEY);
+        store.set(INCOGNITO_KEY, !isIncognito);
+        app.relaunch();
+        app.exit();
       },
       icon: nativeImage.createFromBuffer(Buffer.from(IncognitoIcon)).resize({ width: 15, height: 15 }),
       accelerator: 'Ctrl + Shift + N'
@@ -157,41 +154,43 @@ export const showCustomizeMenu = (data: {
 
     { type: 'separator' },
 
-    {
-      label: 'Trình quản lý mật khẩu',
-      click: () => {
-        console.log('haha');
-      },
-      icon: nativeImage.createFromBuffer(Buffer.from(PasswordIcon)).resize({ width: 15, height: 15 })
-    },
-    {
-      label: 'Tệp đã tải xuống',
-      click: () => {
-        console.log('haha');
-      },
-      enabled: false,
-      icon: nativeImage.createFromBuffer(Buffer.from(DownloadIcon)).resize({ width: 15, height: 15 }),
-      accelerator: 'Ctrl + J'
-    },
-    {
-      label: 'Lịch sử',
-      click: () => {
-        // controlView.webContents.send('effect-system-url', 'stormik://history');
-        createNewSystemTab({
-          controlView,
-          store,
-          newUrl: `stormik://history`,
-          newTitle: 'Lịch sử'
-        });
-      },
-      accelerator: 'Ctrl + H'
-    },
+    // {
+    //   label: 'Trình quản lý mật khẩu',
+    //   click: () => {
+    //     console.log('haha');
+    //   },
+    //   icon: nativeImage.createFromBuffer(Buffer.from(PasswordIcon)).resize({ width: 15, height: 15 })
+    // },
+    // {
+    //   label: 'Tệp đã tải xuống',
+    //   click: () => {
+    //     console.log('haha');
+    //   },
+    //   enabled: false,
+    //   icon: nativeImage.createFromBuffer(Buffer.from(DownloadIcon)).resize({ width: 15, height: 15 }),
+    //   accelerator: 'Ctrl + J'
+    // },
+    // {
+    //   label: 'Lịch sử',
+    //   click: () => {
+    //     // controlView.webContents.send('effect-system-url', 'stormik://history');
+    //     createNewSystemTab({
+    //       controlView,
+    //       store,
+    //       newUrl: `stormik://history`,
+    //       newTitle: 'Lịch sử'
+    //     });
+    //   },
+    //   accelerator: 'Ctrl + H'
+    // },
     {
       label: 'Xóa dữ liệu duyệt web',
       click: () => {
-        console.log('haha');
+        mainWindow.webContents.session.clearCache();
+        mainWindow.webContents.session.clearStorageData();
       },
-      accelerator: 'Ctrl + Shift + Del'
+      accelerator: 'Ctrl + Shift + Del',
+      icon: nativeImage.createFromBuffer(Buffer.from(HistoryIcon)).resize({ width: 15, height: 15 })
     },
 
     { type: 'separator' },
@@ -199,37 +198,52 @@ export const showCustomizeMenu = (data: {
     {
       label: 'In',
       click: () => {
-        console.log('haha');
+        mainWindow.webContents.print({
+          silent: false,
+          printBackground: true
+        });
       },
-      accelerator: 'Ctrl + P'
+      accelerator: 'Ctrl + P',
+      icon: nativeImage.createFromBuffer(Buffer.from(PrintIcon)).resize({ width: 15, height: 15 })
     },
-    {
-      label: 'Chia sẻ                                      ',
-      click: () => {
-        console.log('haha');
-      }
-    },
+    // {
+    //   label: 'Chia sẻ                                      ',
+    //   click: () => {
+    //     console.log('haha');
+    //   }
+    // },
 
     { type: 'separator' },
 
     {
       label: 'Trung tâm trợ giúp',
       click: () => {
-        console.log('haha');
-      }
-    },
-    {
-      label: 'Cài đặt',
-      click: () => {
-        console.log('haha');
+        createNewTab({
+          mainWindow,
+          controlView,
+          tabsContentView,
+          setTabsContentView: (tabsContent: TabContentView[]) => setTabsContentView(tabsContent),
+          store,
+          preloadUrl,
+          newUrl: 'https://stormik.org/support',
+          nextTabLength: getTabsLength(store) + 1
+        });
       },
-      icon: nativeImage.createFromBuffer(Buffer.from(SettingIcon)).resize({ width: 15, height: 15 })
+      icon: nativeImage.createFromBuffer(Buffer.from(SupportIcon)).resize({ width: 15, height: 15 })
     },
+    // {
+    //   label: 'Cài đặt',
+    //   click: () => {
+    //     console.log('haha');
+    //   },
+    //   icon: nativeImage.createFromBuffer(Buffer.from(SettingIcon)).resize({ width: 15, height: 15 })
+    // },
     {
       label: 'Thoát',
       click: () => {
-        console.log('haha');
-      }
+        app.quit();
+      },
+      icon: nativeImage.createFromBuffer(Buffer.from(QuitIcon)).resize({ width: 15, height: 15 })
     }
   ];
   const menu = Menu.buildFromTemplate(template);
