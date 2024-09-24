@@ -9,6 +9,7 @@ export interface Tab {
   windowId?: string;
   view?: WebContentsView;
   isLoading?: boolean;
+  systemTab?: string;
 }
 
 export interface TabContentView {

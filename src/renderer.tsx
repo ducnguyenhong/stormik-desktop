@@ -31,7 +31,6 @@ import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import './index.css';
 import Control from './renderer/control';
-import History from './renderer/history';
 
 const router = createHashRouter([
   {
@@ -39,8 +38,8 @@ const router = createHashRouter([
     element: <Control />
   },
   {
-    path: 'history',
-    element: <History />
+    path: '/history',
+    element: <Control />
   }
 ]);
 

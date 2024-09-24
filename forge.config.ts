@@ -49,6 +49,14 @@ const config: ForgeConfig = {
             preload: {
               js: './src/preload.ts'
             }
+          },
+          {
+            html: './src/renderer/history/history.html',
+            js: './src/renderer/history/history-render.tsx',
+            name: 'history_window',
+            preload: {
+              js: './src/preload.ts'
+            }
           }
         ]
       }

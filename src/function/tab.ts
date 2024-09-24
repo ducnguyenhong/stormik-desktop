@@ -275,8 +275,9 @@ export const createNewSystemTab = (data: {
   store: any;
   newUrl: string;
   newTitle: string;
+  systemTab: string;
 }) => {
-  const { controlView, store, newUrl, newTitle } = data;
+  const { controlView, store, newUrl, newTitle, systemTab } = data;
   const newTabId = uuidV4();
 
   const tabList = getTabList(store);
@@ -288,10 +289,11 @@ export const createNewSystemTab = (data: {
     isActive: true,
     title: newTitle,
     url: newUrl,
-    isLoading: false
+    isLoading: false,
+    systemTab
   });
 
-  // controlView.webContents.send('effect-system-url', 'stormik://history');
+  controlView.webContents.send('effect-system-url', 'stormik://history');
   addTabsLength(store);
   setCurrentTabId(store, newTabId);
   setTabList(store, newTabList);

@@ -25,6 +25,7 @@ import {
 // plugin that tells the Electron app where to look for the Webpack-bundled app code (depending on
 // whether you're running in development or production).
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
+declare const HISTORY_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 const store: any = new Store();
@@ -355,7 +356,12 @@ const createWindow = (defaultTabId?: string): void => {
         tabsContentView?.[i]?.view?.setVisible(false);
       }
     }
-
+    // const currentTab = tabList.find((i) => i.id === tabId);
+    // if (currentTab.systemTab === 'HISTORY') {
+    //   bodyView.webContents.loadURL(HISTORY_WINDOW_WEBPACK_ENTRY);
+    // } else {
+    //   bodyView.webContents.loadURL(currentTab.url);
+    // }
     const newTabList = tabList.map((i) => ({ ...i, isActive: i.id === tabId }));
     setCurrentTabId(store, tabId);
     setTabList(store, newTabList);
@@ -431,13 +437,15 @@ const createWindow = (defaultTabId?: string): void => {
       event,
       mainWindow,
       controlView,
+      bodyView,
       tabsContentView,
       setTabsContentView: (tabsContent: TabContentView[]) => {
         tabsContentView = tabsContent;
       },
       store,
       preloadUrl: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-      app
+      app,
+      historyEntry: HISTORY_WINDOW_WEBPACK_ENTRY
     });
   });
 
@@ -457,10 +465,10 @@ const createWindow = (defaultTabId?: string): void => {
       const showDevtool = store.get(SHOW_DEVTOOL_STORE_KEY);
       if (showDevtool) {
         store.set(SHOW_DEVTOOL_STORE_KEY, false);
-        bodyView.webContents.closeDevTools();
+        controlView.webContents.closeDevTools();
       } else {
         store.set(SHOW_DEVTOOL_STORE_KEY, true);
-        bodyView.webContents.openDevTools();
+        controlView.webContents.openDevTools();
       }
     }
 

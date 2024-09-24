@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { Tab } from '../../types/tab.type';
 import Bookmark from './bookmark';
@@ -12,7 +13,7 @@ import TabList from './tabs';
 const Control: React.FC = () => {
   const [tabs, setTabs] = useRecoilState(tabsAtom);
   const [isIncognito, setIsIncognito] = useRecoilState(isIncognitoAtom);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.electronAPI.effectTabChange((tabsData: Tab[]) => {
@@ -26,13 +27,13 @@ const Control: React.FC = () => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   window.electronAPI.effectSystemUrl((url: string) => {
-  //     if (url === 'stormik://history') {
-  //       navigate('/history');
-  //     }
-  //   });
-  // }, [navigate]);
+  useEffect(() => {
+    // window.electronAPI.effectSystemUrl((url: string) => {
+    //   if (url === 'stormik://history') {
+    //     navigate('/history');
+    //   }
+    // });
+  }, [navigate]);
 
   return (
     <div

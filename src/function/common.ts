@@ -105,13 +105,26 @@ export const showCustomizeMenu = (data: {
   event: Electron.IpcMainEvent;
   mainWindow: BrowserWindow;
   controlView: WebContentsView;
+  bodyView: WebContentsView;
   tabsContentView: TabContentView[];
   store: any;
   preloadUrl: string;
   setTabsContentView: (data: TabContentView[]) => void;
   app: any;
+  historyEntry: string;
 }) => {
-  const { event, mainWindow, controlView, tabsContentView, store, preloadUrl, setTabsContentView, app } = data;
+  const {
+    event,
+    mainWindow,
+    controlView,
+    tabsContentView,
+    store,
+    preloadUrl,
+    setTabsContentView,
+    app,
+    bodyView,
+    historyEntry
+  } = data;
 
   const template: any[] = [
     {
@@ -170,19 +183,21 @@ export const showCustomizeMenu = (data: {
     //   icon: nativeImage.createFromBuffer(Buffer.from(DownloadIcon)).resize({ width: 15, height: 15 }),
     //   accelerator: 'Ctrl + J'
     // },
-    // {
-    //   label: 'Lịch sử',
-    //   click: () => {
-    //     // controlView.webContents.send('effect-system-url', 'stormik://history');
-    //     createNewSystemTab({
-    //       controlView,
-    //       store,
-    //       newUrl: `stormik://history`,
-    //       newTitle: 'Lịch sử'
-    //     });
-    //   },
-    //   accelerator: 'Ctrl + H'
-    // },
+    {
+      label: 'Lịch sử',
+      click: () => {
+        // controlView.webContents.send('effect-system-url', 'stormik://history');
+        // createNewSystemTab({
+        //   controlView,
+        //   store,
+        //   newUrl: `stormik://history`,
+        //   newTitle: 'Lịch sử',
+        //   systemTab: 'HISTORY'
+        // });
+        bodyView.webContents.loadURL(historyEntry);
+      },
+      accelerator: 'Ctrl + H'
+    },
     {
       label: 'Xóa dữ liệu duyệt web',
       click: () => {
