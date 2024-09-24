@@ -465,10 +465,10 @@ const createWindow = (defaultTabId?: string): void => {
       const showDevtool = store.get(SHOW_DEVTOOL_STORE_KEY);
       if (showDevtool) {
         store.set(SHOW_DEVTOOL_STORE_KEY, false);
-        controlView.webContents.closeDevTools();
+        bodyView.webContents.closeDevTools();
       } else {
         store.set(SHOW_DEVTOOL_STORE_KEY, true);
-        controlView.webContents.openDevTools();
+        bodyView.webContents.openDevTools();
       }
     }
 
